@@ -6,10 +6,18 @@
 //  Copyright © 2019 Daniel Harvey. All rights reserved.
 //
 
+#include <SFML/Graphics.hpp>
+#include <vector>
 #include <iostream>
+#include "Game.hpp"
+#include "imgui.h"
+#include "imgui-SFML.h"
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+int main()
+{
+    Game g;
+    g.Start();
+    g.Update();
     return 0;
+	
 }
