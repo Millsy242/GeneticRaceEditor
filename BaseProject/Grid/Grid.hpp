@@ -15,6 +15,7 @@
 #include <fstream>
 #include "xmlwriter.h"
 #include <thread>
+#include "SelbaWard.hpp"
 
 enum class Tool
 {
@@ -60,7 +61,7 @@ public:
     
     void LoadFromFile(std::string FileName);
     
-    void SaveToFile(std::string &data);
+    void SaveToFile(std::string &data, sw::ProgressBar &bar);
     
     bool Changed = true;
 	

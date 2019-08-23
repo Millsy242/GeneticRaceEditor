@@ -30,7 +30,7 @@ public:
 	void saveTracktoGrid(Track *track);
     Grid* getGrid();
 	
-	void Serialise(Yaml::Node &root); 
+    void Serialise(Yaml::Node &root, sw::ProgressBar &bar); 
     
 private:
 	

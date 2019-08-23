@@ -293,13 +293,16 @@ bool Grid::LoadFromImage(sf::Image image)
     return true;
 }
 
-void Grid::SaveToFile(std::string &data)
+void Grid::SaveToFile(std::string &data, sw::ProgressBar &bar)
 {
+    float currentbar = bar.getPercentage();
+    float numcomplete = 0;
 	for(int y = 0; y<NumRow; y++)
 	{
 		for(int x = 0 ; x< NumCol ; x++)
 		{
-			data += "Cell" + std::to_string(myGrid[y][x].CellNumber) + "X:" + std::to_string(x) + "\nCell" + std::to_string(myGrid[y][x].CellNumber) + "Y:" + std::to_string(y) + "\nCell" + std::to_string(myGrid[y][x].CellNumber) + "C:" + std::to_string((uint32_t)myGrid[y][x].getColour().toInteger()) + "\nCell"+ std::to_string(myGrid[y][x].CellNumber) + "T:";
+            auto cellnum = std::to_string(myGrid[y][x].CellNumber);
+			data += "Cell" + cellnum + "X:" + std::to_string(x) + "\nCell" + cellnum + "Y:" + std::to_string(y) + "\nCell" + cellnum + "C:" + std::to_string((uint32_t)myGrid[y][x].getColour().toInteger()) + "\nCell"+ cellnum + "T:";
 			
 				switch (myGrid[y][x].celltype)
 				{
@@ -319,6 +322,11 @@ void Grid::SaveToFile(std::string &data)
 						data +=  "eNull\n";
 						break;
 				}
+            numcomplete++;
+            bar.setPercentage(currentbar + ((numcomplete/TotalSize)*10));
+            
+            
+            
 		}
 	}
 }

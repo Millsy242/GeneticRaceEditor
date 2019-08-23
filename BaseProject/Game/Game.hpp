@@ -13,6 +13,8 @@
 #include "DrawingGrid.hpp"
 #include "Track.hpp"
 #include "Yaml.hpp"
+#include <thread>
+#include "SelbaWard.hpp"
 
 enum State
 {
@@ -34,10 +36,15 @@ public:
     void LateUpdate();
     void Render();
     void Input();
+    void Save(); 
     
 private:
 	const double Version = 0.45; 
 	std::string TrackName = "NewTrack";
+    
+    sw::ProgressBar bar;
+    sf::Text savingtext;
+    sf::Font font; 
 	
     State GameState;
 	Yaml::Node root;

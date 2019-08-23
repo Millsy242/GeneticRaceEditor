@@ -192,7 +192,7 @@ Grid* DrawingGrid::getGrid()
 {
     return &grid;
 }
-void DrawingGrid::Serialise(Yaml::Node &root)
+void DrawingGrid::Serialise(Yaml::Node &root, sw::ProgressBar &bar)
 {
 	std::string Data = "";
 
@@ -202,10 +202,11 @@ void DrawingGrid::Serialise(Yaml::Node &root)
 	"TrackEdgeColour: " + std::to_string((uint32_t)TrackEdgeColour.toInteger()) + "\n"
 	"BackgroundColour: " + std::to_string((uint32_t)grid.GridBackground.toInteger()) + "\n"
 	"Optimise: " + std::to_string((int)Optimise) + "\n";
-	
+    bar.setPercentage(bar.getPercentage()+1);
 	try
 	{
 		Yaml::Parse(root, Data);
+        bar.setPercentage(bar.getPercentage()+1);
 	}
 	catch (const Yaml::Exception e)
 	{
@@ -221,7 +222,7 @@ void DrawingGrid::Serialise(Yaml::Node &root)
 		//Then using the Track Nodes Data to create the Track Ingame.
 		//This is fine as long as there are no manual edits to the grid
 		//such as: fine tuning tracks, adding trackside art etc.
-		grid.SaveToFile(Data);
+		grid.SaveToFile(Data,bar);
 		
 		try
 		{
