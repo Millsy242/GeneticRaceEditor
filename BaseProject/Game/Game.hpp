@@ -36,7 +36,8 @@ public:
     void LateUpdate();
     void Render();
     void Input();
-    void Save(); 
+    void Save();
+    void Load(std::string filename);
     
 private:
 	const double Version = 0.45; 

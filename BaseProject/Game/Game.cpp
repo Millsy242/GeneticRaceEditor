@@ -116,8 +116,11 @@ void Game::Input()
 	{
         GameState = eSave; 
 	}
-	//if(ImGui::Button("Load"))
-	// grid.LoadFromFile("temp.xml");
+	if(ImGui::Button("Load"))
+    {
+        GameState = eLoad;
+        Load("NewTrack.yml");
+    }
 	ImGui::End();
 	if(GameState == State::eDraw)
 		Grid.Input(window.GetMouse());
@@ -170,7 +173,6 @@ void Game::Save()
     try
     {
         Yaml::Parse(root, Data);
-        
     }
     catch (const Yaml::Exception e)
     {
@@ -209,6 +211,79 @@ void Game::Save()
         savingtext.setString("");
     }
     }
+}
+
+void Game::Load(std::string filename)
+{
+    try
+    {
+        std::cout<<"Parsing"<<std::endl;
+        Yaml::Parse(root, filename.data());
+        std::cout<<"Fin Parsing"<<std::endl;
+        
+        if(root.IsNone())
+            std::cout<<"isnone = true\n";
+    }
+    catch (const Yaml::Exception e)
+    {
+        std::cout << "Exception " << e.Type() << ": " << e.what() << std::endl;
+        return;
+    }
+    std::cout<<"Doing Grid"<<std::endl;
+    int height,width,cellwidth,cellheight,totalsize;
+    u_int32_t BackgroundColour;
+    
+    TrackName = root["Name"].As<std::string>();
+    height = root["Height"].As<int>();
+    width = root["Width"].As<int>();
+    cellheight =  root["Cell Height"].As<int>();
+    cellwidth =  root["Cell Width"].As<int>();
+    BackgroundColour = root["Background Colour"].As<u_int32_t>();
+    totalsize = root["GridSize"].As<int>();
+    
+    Grid.Start(width, height, 400, 0, cellwidth, cellheight);
+    Grid.getGrid()->SetBackgroundColour(sf::Color(BackgroundColour));
+    int x,y;
+    uint32_t colour;
+    std::string name;
+    std::cout<<"OI      " <<totalsize<<std::endl;
+    if(!root["Optimise"].As<bool>())
+    {
+        for(int i{0}; i<totalsize; i++)
+        {
+            name = "Cell" + std::to_string(i);
+            x = root[name + "X"].As<int>();
+            
+            y = root[name + "Y"].As<int>();
+            colour = root[name + "C"].As<u_int32_t>();
+            std::cout<<colour<<std::endl;
+            Grid.getGrid()->SetCell(x, y, sf::Color(colour));
+        }
+    }
+    else
+    {
+        std::cout << "Optimisation" << std::endl;
+    }
+    std::cout<<"Doing Track"<<std::endl;
+    int numnodes{root["NumNodes"].As<int>()},Sector1{root["Sector1"].As<int>()},Sector2{root["Sector2"].As<int>()},Sector3{root["Sector3"].As<int>()},Start{root["StartLine"].As<int>()},Finish{root["FinishLine"].As<int>()};
+    float TrackWidth{root["TrackWidth"].As<float>()};
+
+    track.Start(window.ScreenWidth(), window.ScreenHeight(),true,numnodes,Sector1,Sector2,Sector3,Start,Finish,TrackWidth);
+    track.Clear();
+    
+    float Tx,Ty;
+
+    for(int i{0};i<numnodes;i++)
+    {
+        name = "Node" + std::to_string(i) + "_";
+        Tx = root[name + "X"].As<int>();
+        Ty = root[name + "Y"].As<int>();
+        track.spline.AddPoint(sf::Vector2f(Tx,Ty));
+    }
+    
+    track.UpdateTrack();
+    std::cout<<"Fin"<<std::endl;
+    GameState = eNull;
 }
 
 

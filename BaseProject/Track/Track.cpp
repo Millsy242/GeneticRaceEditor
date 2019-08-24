@@ -12,10 +12,20 @@
 Track::Track()
 {
 }
-void Track::Start(int ScreenWidth, int ScreenHeight)
+void Track::Start(int ScreenWidth, int ScreenHeight,bool loading ,int NumNodes,int s1 , int s2, int s3, int Start, int End, float Twidth)
 {
-    font.loadFromFile("Roboto-Black.ttf");
+    if(loading)
+    {
+        numNodes = NumNodes;
+        Sectors[0] = s1;
+        Sectors[1] = s2;
+        Sectors[2] = s3;
+        StartLine = Start;
+        FinishLine = End;
+        trackwidth = Twidth; 
+    }
     
+    font.loadFromFile("Roboto-Black.ttf");
     text.setFillColor(sf::Color::Magenta);
     text.setCharacterSize(20);
     text.setFont(font);
@@ -29,8 +39,6 @@ void Track::Start(int ScreenWidth, int ScreenHeight)
         LNode.setup(Lspline, {0,0});
         node RNode;
         RNode.setup(Rspline, {0,0});
-		
-		
         
         nodes.push_back(newnode);
         Lnodes.push_back(LNode);
@@ -39,6 +47,12 @@ void Track::Start(int ScreenWidth, int ScreenHeight)
     }
 	
     UpdateTrack();
+}
+void Track::Clear()
+{
+    spline.points.clear();
+    Rspline.points.clear();
+    Lspline.points.clear();
 }
 void Track::AddNode(int pos)
 {

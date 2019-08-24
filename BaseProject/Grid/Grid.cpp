@@ -21,6 +21,12 @@ int roundDown(int n, int m)
 
 void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int cellH)
 {
+    for(int i{0}; i < myGrid.size(); i++)
+    {
+        myGrid[i].clear();
+    }
+    myGrid.clear(); 
+    
     Width =  width;
     Height = height;
     CellW = cellW;

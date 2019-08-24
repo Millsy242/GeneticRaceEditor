@@ -45,22 +45,25 @@ public:
     Track();
 	~Track(){};
     
-    void Start(int ScreenWidth, int ScreenHeight);
+    void Start(int ScreenWidth, int ScreenHeight,bool loading = false,int NumNodes = -1,int s1 = -1, int s2 = -1, int s3 = -1 , int Start = -1, int End = -1, float Twidth = -1.f);
     void Input(sf::Vector2i MousePos); 
     void UpdateTrack();
     void Render(Window *window);
     
     void Onleave();
     void OnReEntry();
+    void Clear(); 
     std::pair<mySpline*, mySpline*> getSplines();
 	
-	void Serialise(Yaml::Node &root); 
+	void Serialise(Yaml::Node &root);
+    
+    mySpline spline;
     
 private:
 	void AddNode(int pos);
 	void RemoveNode(int pos);
 	
-    mySpline spline;
+    
     mySpline Rspline;
     mySpline Lspline;
     

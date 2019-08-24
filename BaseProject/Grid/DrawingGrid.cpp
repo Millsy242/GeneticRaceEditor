@@ -61,12 +61,9 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 	//window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
 	
-	
-	
 	 float col[3]{BrushColour.r/255.f, BrushColour.g/255.f,BrushColour.b/255.f};
 	ImGui::Begin("Drawing Tools",NULL, window_flags);
 	
-
 	if(SelectedTool != Tool::eFill )
 	{
 		if(ImGui::SliderInt("BrushSize", &BrushSize, 1, 500))
@@ -91,11 +88,8 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 	if(ImGui::Button("Square"))
 		brushShape = BrushShape::eSquare;
 	
-	
 	ImGui::End();
-	
 
-    
 	UpdatePointers(BrushSize, false, mousepos);
 	
     if(!ImGui::IsAnyWindowHovered()) //Allow ImGui Windows to be above grid whilst also not drawing on grid
@@ -201,20 +195,9 @@ void DrawingGrid::Serialise(Yaml::Node &root, sw::ProgressBar &bar)
 	"GridSize: " + std::to_string(grid.TotalSize) + "\n"
 	"TrackEdgeColour: " + std::to_string((uint32_t)TrackEdgeColour.toInteger()) + "\n"
 	"BackgroundColour: " + std::to_string((uint32_t)grid.GridBackground.toInteger()) + "\n"
-	"Optimise: " + std::to_string((int)Optimise) + "\n";
+	"Optimise: " + std::to_string((int)Optimise) + "\n\n\n";
     bar.setPercentage(bar.getPercentage()+1);
-	try
-	{
-		Yaml::Parse(root, Data);
-        bar.setPercentage(bar.getPercentage()+1);
-	}
-	catch (const Yaml::Exception e)
-	{
-		std::cout << "Exception " << e.Type() << ": " << e.what() << std::endl;
-		return;
-	}
 
-	Data = "";
 	if(!Optimise)
 	{
 		//Only run this when we dont want to optimise

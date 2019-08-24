@@ -364,10 +364,10 @@
 			children = (
 				0B4A1DB023102F270009A467 /* DrawingGrid.hpp */,
 				0B4A1DB123102F270009A467 /* Cell.cpp */,
-				0B4A1DB223102F270009A467 /* Grid.hpp */,
 				0B4A1DB323102F270009A467 /* DrawingGrid.cpp */,
 				0B4A1DB423102F270009A467 /* Cell.hpp */,
 				0B4A1DB523102F270009A467 /* Grid.cpp */,
+				0B4A1DB223102F270009A467 /* Grid.hpp */,
 			);
 			path = Grid;
 			sourceTree = "<group>";
