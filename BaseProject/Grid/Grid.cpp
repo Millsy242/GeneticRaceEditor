@@ -72,6 +72,7 @@ void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int 
     gridSprite.setTexture(gridTexture);
     
     rendertexture.create(Width, Height);
+    MouseOnGrid = true;
     
 }
 void Grid::SetupGrid(sf::Vector2f gridPos, std::string ImagePath, int cellW, int cellH)
@@ -86,108 +87,41 @@ void Grid::SetupGrid(sf::Vector2f gridPos, sf::Image Image, int cellW, int cellH
     SetupGrid(gridPos, Image.getSize().x * cellW, Image.getSize().y * cellH, cellW, cellH);
     LoadFromImage(Image);
 }
-//consider refactoring this using hopsons mean video :(
-void Grid::CheckMousePos(bool LMouseDown,bool RMouseDown,Tool selectedTool, BrushShape brushshape,sf::Vector2i mousepos, sf::CircleShape shape, sf::Color &BrushColour)
+sf::Vector2i Grid::ConverttoGrid(sf::Vector2f point, bool GridPos)
 {
-    sf::Vector2f Mouse = sf::Vector2f(mousepos) - GridPosition;
-    if(Mouse.x  > 0 && Mouse.y > 0 && Mouse.x <  Width && Mouse.y <  Height ) //if mouse is on the grid
+    if(!GridPos)
     {
-        MouseOnGrid = true;
-		if((RMouseDown || LMouseDown) && selectedTool != Tool::eNull) // is a mouse button held down?
-        {
-            Changed = true;
-            
-            auto ShapeHeight = shape.getGlobalBounds().height;
-            auto ShapeWidth = shape.getGlobalBounds().width;
-
-            
-            //go through all pixels inside the rectangle around the brush
-            
-            for(int yi = (shape.getGlobalBounds().top-GridPosition.y); yi < ((shape.getGlobalBounds().top + ShapeHeight) - GridPosition.y); yi++)
-            {
-                for(int xi = (shape.getGlobalBounds().left-GridPosition.x); xi < ((shape.getGlobalBounds().left + ShapeWidth) - GridPosition.x); xi++)
-                {
-                    //make sure we're inside a cell
-                    int x = roundDown(xi, CellW) / CellW;
-                    int y = roundDown(yi, CellH) / CellH;
-                    
-                    //Fill tool coords need to only check from the mouse position
-                    int xfill = roundDown(Mouse.x, CellW)/CellW;
-                    int yfill =  roundDown(Mouse.y, CellH)/CellH;
-                    
-                   if(x < NumCol   && y < NumRow && x > 0 && y>0)
-                    {
-						if((brushshape == BrushShape::eCircle && myGrid[y][x].MouseInCell(Mouse,ShapeWidth/2))||brushshape == BrushShape::eSquare)
-                    {
-                        switch (selectedTool)
-                        {
-                            case Tool::eNull:
-                                Changed = false;
-                                break;
-                            case Tool::eFill:
-                                TargetColour = myGrid[yfill][xfill].getColour();
-                                ReplaceColour = BrushColour;
-                                Fill(xfill,yfill);
-                                break;
-                            case Tool::eBrush:
-                                myGrid[y][x].SetColour(BrushColour,false);
-                                break;
-                            case Tool::eErase:
-                                myGrid[y][x].SetColour(GridBackground,true);
-                                break;
-                            case Tool::eColourPick:
-                                BrushColour = myGrid[y][x].getColour();
-                                break;
-                            default:
-								std::cout<<"you have more tools than are defined - CIRCLE"<<std::endl;
-                                break;
-                        }
-                    }
-					
-                    }
-                }
-            }
-        }
+        point.y = roundDown(point.y - GridPosition.y, CellH) / CellH;
+        point.x = roundDown(point.x - GridPosition.x, CellW) / CellW;
     }
     else
     {
-        MouseOnGrid = false;
+        point.y = roundDown(point.y, CellH) / CellH;
+        point.x = roundDown(point.x, CellW) / CellW;
     }
-    
+    return sf::Vector2i((int)point.x,(int)point.y);
 }
-bool Grid::Fill(int xIndex, int yIndex)
+bool Grid::PointOnGrid(sf::Vector2f point, bool GridPos)
 {
-	if(TargetColour == ReplaceColour)
-	{
-		return false;
-	}
-	std::vector<std::pair<int, int>> S;
-	
-	S.push_back(std::pair<int,int>(yIndex,xIndex));
-	
-	while(S.size() > 0)
-	{
-		auto p = S.back();
-		S.pop_back();
-		int x = p.second;
-		int y = p.first;
-		if(x < NumCol  && y < NumRow && x >= 0 && y >= 0)
-		{
-			if(myGrid[y][x].getColour() == TargetColour)
-			{
-				SetCell(x, y, ReplaceColour);
-				if(y-1 >= 0 )
-					S.push_back({y-1,x});
-				if(x-1 >= 0)
-					S.push_back({y,x-1});
-				if(y+1<NumRow)
-					S.push_back({y+1,x});
-				if(x+1<NumCol)
-					S.push_back({y,x+1});
-			}
-		}
-	}
-	
+    if(!GridPos)
+    {
+        point.y = roundDown(point.y - GridPosition.y, CellH) / CellH;
+        point.x = roundDown(point.x - GridPosition.x, CellW) / CellW;
+    }
+    else
+    {
+        point.y = roundDown(point.y, CellH) / CellH;
+        point.x = roundDown(point.x, CellW) / CellW;
+    }
+    if(point.y < 0 )
+        return false;
+    if(point.x< 0)
+        return false;
+    if(point.y>NumRow)
+        return false;
+    if(point.x>NumCol)
+        return false;
+    
     return true;
 }
 

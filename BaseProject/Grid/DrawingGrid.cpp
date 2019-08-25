@@ -9,7 +9,7 @@
 #include "DrawingGrid.hpp"
 #include "Track.hpp"
 
-DrawingGrid::DrawingGrid() : BrushColour(sf::Color::Green)
+DrawingGrid::DrawingGrid()
 {
     
 }
@@ -18,38 +18,43 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
 {
     //grid.SetupGrid(sf::Vector2f(100,0),"myimage.png", 2, 2);
     grid.SetupGrid({offsetx,offsety}, width, height, cellW,cellH);
-    pointerCircle.setRadius(BrushSize);
-    pointerCircle.setFillColor(sf::Color::Transparent);
-    pointerCircle.setOrigin(pointerCircle.getLocalBounds().width/2, pointerCircle.getLocalBounds().height/2);
-    pointerCircle.setPointCount(2000);
-    pointerCircle.setOutlineThickness(3);
-    pointerCircle.setOutlineColor(sf::Color::Magenta);
+    options.shape.setRadius(options.BrushSize);
+    options.shape.setFillColor(sf::Color::Transparent);
+    options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
+    options.shape.setPointCount(2000);
+    options.shape.setOutlineThickness(3);
+    options.shape.setOutlineColor(sf::Color::Magenta);
 	
-	pointerSquare = pointerCircle;
+	pointerSquare = options.shape;
 	pointerSquare.setPointCount(4);
 	pointerSquare.setRotation(45);
+    
+    options.BrushSize = 20;
+    options.CellHeight = cellH;
+    options.CellWidth = cellW;
+    
 }
 sf::CircleShape& DrawingGrid::GetPointer()
 {
 	if( brushShape == BrushShape::eCircle)
-		return pointerCircle;
+		return options.shape;
 	else if (brushShape == BrushShape::eSquare)
 		return pointerSquare;
 	else
-		return pointerCircle;
+		return options.shape;
 }
 void DrawingGrid::UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i MousePos)
 {
-	pointerCircle.setRadius(BrushSize);
-	pointerSquare.setRadius(BrushSize);
+	options.shape.setRadius(options.BrushSize);
+	pointerSquare.setRadius(options.BrushSize);
 	if(ReCenter)
 	{
-		pointerCircle.setOrigin(pointerCircle.getLocalBounds().width/2, pointerCircle.getLocalBounds().height/2);
+		options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
 		pointerSquare.setOrigin(pointerSquare.getLocalBounds().width/2, pointerSquare.getLocalBounds().height/2);
 	}
 	if(MousePos != sf::Vector2i(-1,-1))
 	{
-		pointerCircle.setPosition(MousePos.x,MousePos.y);
+		options.shape.setPosition(MousePos.x,MousePos.y);
 		pointerSquare.setPosition(MousePos.x,MousePos.y);
 	}
 }
@@ -61,28 +66,40 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 	//window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
 	
-	 float col[3]{BrushColour.r/255.f, BrushColour.g/255.f,BrushColour.b/255.f};
+	 float col[3]{options.MainBrushColour.r/255.f, options.MainBrushColour.g/255.f,options.MainBrushColour.b/255.f};
 	ImGui::Begin("Drawing Tools",NULL, window_flags);
 	
 	if(SelectedTool != Tool::eFill )
 	{
-		if(ImGui::SliderInt("BrushSize", &BrushSize, 1, 500))
-			UpdatePointers(BrushSize, true);
+		if(ImGui::SliderInt("BrushSize", &options.BrushSize, 1, 500))
+			UpdatePointers(options.BrushSize, true);
 	}
 	if(ImGui::ColorPicker3("Colour Pick", col))
 	{
-		BrushColour = sf::Color(col[0]* 255.f,col[1]* 255.f,col[2]* 255.f);
+		options.MainBrushColour = sf::Color(col[0]* 255.f,col[1]* 255.f,col[2]* 255.f);
 	}
 	if(ImGui::Button("Brush"))
+    {
 		 SelectedTool = Tool::eBrush;
+    currentTool = std::make_unique<BrushToolType>();
+    }
 	if(ImGui::Button("Fill"))
+    {
 		SelectedTool = Tool::eFill;
-	if(ImGui::Button("Pick"))
-		 SelectedTool = Tool::eColourPick;
+    currentTool = std::make_unique<FillToolType>();
+    }
+//	if(ImGui::Button("Pick"))
+	//	 SelectedTool = Tool::eColourPick;
 	if(ImGui::Button("Erase"))
+    {
 		 SelectedTool = Tool::eErase;
+    currentTool = std::make_unique<EraserToolType>();
+    }
 	if(ImGui::Button("Null"))
-		SelectedTool = Tool::eNull;
+    {
+        SelectedTool = Tool::eNull;
+		currentTool = std::make_unique<NullToolType>();
+    }
 	if(ImGui::Button("Circle"))
 		brushShape = BrushShape::eCircle;
 	if(ImGui::Button("Square"))
@@ -90,15 +107,20 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 	
 	ImGui::End();
 
-	UpdatePointers(BrushSize, false, mousepos);
+	UpdatePointers(options.BrushSize, false, mousepos);
 	
     if(!ImGui::IsAnyWindowHovered()) //Allow ImGui Windows to be above grid whilst also not drawing on grid
-    	grid.CheckMousePos(sf::Mouse::isButtonPressed(sf::Mouse::Left),sf::Mouse::isButtonPressed(sf::Mouse::Right), SelectedTool, brushShape, mousepos, pointerCircle, BrushColour);
+    {
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            auto mp = mousepos - (sf::Vector2i)getGrid()->GridPosition;
+            currentTool->OnMouseDown(mp, grid, options);
+        }
+    }
     
 }
 void DrawingGrid::Render(Window *window)
-{
-	
+{	
     grid.Render(*window,IsShown);
     if(IsShown)
     {    

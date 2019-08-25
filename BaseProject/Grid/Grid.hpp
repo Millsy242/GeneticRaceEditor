@@ -42,7 +42,6 @@ public:
     void SetupGrid(sf::Vector2f gridPos, std::string ImagePath, int cellW=1, int cellH=1);
     void SetupGrid(sf::Vector2f gridPos, sf::Image Image, int cellW=1, int cellH=1);
     
-    void CheckMousePos(bool LMouseDown,bool RMouseDown, Tool selectedTool, BrushShape brushshape,sf::Vector2i mousepos, sf::CircleShape shape, sf::Color &BrushColour);
     
     void Render(Window &window, bool isshown = true);
     
@@ -50,9 +49,10 @@ public:
     void SetCell(int xGrid, int yGrid, sf::Color colour);
     void SetBackgroundColour(sf::Color NewColour);
     
-    bool Fill(int xIndex, int yIndex);
     
     
+    bool PointOnGrid(sf::Vector2f point, bool GridPos);
+    sf::Vector2i ConverttoGrid(sf::Vector2f point, bool GridPos); 
     
     bool isMouseOnGrid();
     
@@ -69,25 +69,24 @@ public:
 	unsigned int TotalSize;
 	 sf::Color GridBackground;
     
+      sf::Vector2f GridPosition;
+     std::vector<std::vector<Cell>> myGrid;
+    
 private:
     
     
-    std::vector<std::vector<Cell>> myGrid;
-    
 	
-    
     bool MouseOnGrid = false;
     
     unsigned int temp = 0; 
     
-    sf::Vector2f GridPosition; 
+  
     
     sf::Texture gridTexture;
     sf::Sprite gridSprite;
     
     sf::RectangleShape rect;
     
-	
     
     sf::Color TargetColour{sf::Color::White}, ReplaceColour{sf::Color::Black};
     

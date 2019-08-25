@@ -8,7 +8,7 @@
 
 #ifndef DrawingGrid_hpp
 #define DrawingGrid_hpp
-
+#include "Tool.hpp"
 #include <SFML/Graphics.hpp>
 #include "Window.hpp"
 #include "Grid.hpp"
@@ -41,9 +41,9 @@ private:
     
     bool IsShown = false; 
     
-    int BrushSize = 20;
-    sf::Color BrushColour;
-    sf::CircleShape pointerCircle;
+    
+    
+    
 	sf::CircleShape pointerSquare;
     sf::Cursor cursor;
     sf::Cursor OnScreenCursor;
@@ -52,7 +52,9 @@ private:
 	
 	sf::Color TrackEdgeColour = sf::Color(64,64,64);
 	
-	bool Optimise = false; 
+	bool Optimise = false;
+    PaintOptions options; 
+    std::unique_ptr<ToolType> currentTool = std::make_unique<NullToolType>();
     
 };
 

@@ -48,6 +48,10 @@
 		0B4A1DD723102F270009A467 /* Cell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A1DB123102F270009A467 /* Cell.cpp */; };
 		0B4A1DD823102F270009A467 /* DrawingGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A1DB323102F270009A467 /* DrawingGrid.cpp */; };
 		0B4A1DD923102F270009A467 /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A1DB523102F270009A467 /* Grid.cpp */; };
+		0B9766862312DE47005DC725 /* BrushToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9766852312DE47005DC725 /* BrushToolType.cpp */; };
+		0B97668A2312DF28005DC725 /* EraserToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9766872312DF28005DC725 /* EraserToolType.cpp */; };
+		0B97668B2312DF28005DC725 /* FillToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9766882312DF28005DC725 /* FillToolType.cpp */; };
+		0B97668C2312DF28005DC725 /* NullToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9766892312DF28005DC725 /* NullToolType.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -153,6 +157,11 @@
 		0B4A1DB323102F270009A467 /* DrawingGrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawingGrid.cpp; sourceTree = "<group>"; };
 		0B4A1DB423102F270009A467 /* Cell.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Cell.hpp; sourceTree = "<group>"; };
 		0B4A1DB523102F270009A467 /* Grid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Grid.cpp; sourceTree = "<group>"; };
+		0B9766832312D5C8005DC725 /* Tool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Tool.hpp; sourceTree = "<group>"; };
+		0B9766852312DE47005DC725 /* BrushToolType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BrushToolType.cpp; sourceTree = "<group>"; };
+		0B9766872312DF28005DC725 /* EraserToolType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EraserToolType.cpp; sourceTree = "<group>"; };
+		0B9766882312DF28005DC725 /* FillToolType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FillToolType.cpp; sourceTree = "<group>"; };
+		0B9766892312DF28005DC725 /* NullToolType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NullToolType.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +201,7 @@
 		0B3004CC22B53812007515D0 /* BaseProject */ = {
 			isa = PBXGroup;
 			children = (
+				0B9766812312D5B6005DC725 /* Tools */,
 				0B4A1D5F23102F270009A467 /* External Additions */,
 				0B4A1DAC23102F270009A467 /* Game */,
 				0B4A1DAF23102F270009A467 /* Grid */,
@@ -363,13 +373,25 @@
 			isa = PBXGroup;
 			children = (
 				0B4A1DB023102F270009A467 /* DrawingGrid.hpp */,
-				0B4A1DB123102F270009A467 /* Cell.cpp */,
 				0B4A1DB323102F270009A467 /* DrawingGrid.cpp */,
+				0B4A1DB123102F270009A467 /* Cell.cpp */,
 				0B4A1DB423102F270009A467 /* Cell.hpp */,
 				0B4A1DB523102F270009A467 /* Grid.cpp */,
 				0B4A1DB223102F270009A467 /* Grid.hpp */,
 			);
 			path = Grid;
+			sourceTree = "<group>";
+		};
+		0B9766812312D5B6005DC725 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				0B9766872312DF28005DC725 /* EraserToolType.cpp */,
+				0B9766882312DF28005DC725 /* FillToolType.cpp */,
+				0B9766892312DF28005DC725 /* NullToolType.cpp */,
+				0B9766832312D5C8005DC725 /* Tool.hpp */,
+				0B9766852312DE47005DC725 /* BrushToolType.cpp */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -430,6 +452,7 @@
 			files = (
 				0B4A1DB723102F270009A467 /* Track.cpp in Sources */,
 				0B4A1DBB23102F270009A467 /* osdialog.c in Sources */,
+				0B9766862312DE47005DC725 /* BrushToolType.cpp in Sources */,
 				0B4A1DBF23102F270009A467 /* BitmapFont.cpp in Sources */,
 				0B4A1DD123102F270009A467 /* imgui_stdlib.cpp in Sources */,
 				0B4A1DBD23102F270009A467 /* xmlwriter.cpp in Sources */,
@@ -450,7 +473,9 @@
 				0B4A1DCD23102F270009A467 /* Starfield.cpp in Sources */,
 				0B4A1DCF23102F270009A467 /* imgui.cpp in Sources */,
 				0B4A1DC323102F270009A467 /* ConsoleScreen.cpp in Sources */,
+				0B97668C2312DF28005DC725 /* NullToolType.cpp in Sources */,
 				0B4A1DD323102F270009A467 /* imgui_draw.cpp in Sources */,
+				0B97668B2312DF28005DC725 /* FillToolType.cpp in Sources */,
 				0B4A1DD723102F270009A467 /* Cell.cpp in Sources */,
 				0B4A1DB623102F270009A467 /* Window.cpp in Sources */,
 				0B4A1DD823102F270009A467 /* DrawingGrid.cpp in Sources */,
@@ -459,6 +484,7 @@
 				0B4A1DCE23102F270009A467 /* imgui_widgets.cpp in Sources */,
 				0B4A1DC823102F270009A467 /* GallerySprite.cpp in Sources */,
 				0B4A1DBE23102F270009A467 /* Line.cpp in Sources */,
+				0B97668A2312DF28005DC725 /* EraserToolType.cpp in Sources */,
 				0B4A1DD023102F270009A467 /* imgui-SFML.cpp in Sources */,
 				0B4A1DC523102F270009A467 /* BitmapText.cpp in Sources */,
 				0B4A1DC923102F270009A467 /* ConsoleScreenOld.cpp in Sources */,
