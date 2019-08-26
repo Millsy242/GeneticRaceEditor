@@ -33,6 +33,8 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
     options.CellHeight = cellH;
     options.CellWidth = cellW;
     
+     currentTool = std::make_unique<NullToolType>();
+    
 }
 sf::CircleShape& DrawingGrid::GetPointer()
 {

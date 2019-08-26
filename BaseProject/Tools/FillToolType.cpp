@@ -6,41 +6,47 @@
 //  Copyright © 2019 Daniel Harvey. All rights reserved.
 //
 
-#include <stdio.h>
 #include "Tool.hpp"
+#include <vector>
+#include "Grid.hpp"
 
 void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
 {
-    auto ShapeWidth = options.shape.getGlobalBounds().width;    
-    
     //make sure we're inside a cell
-    auto gridcoords = grid.ConverttoGrid(sf::Vector2f(MousePos), false);
+    auto gridcoords = grid.ConverttoGrid(sf::Vector2f(MousePos), true);
     
-    if(grid.PointOnGrid(sf::Vector2f(gridcoords.x,gridcoords.y), false))
+    if(grid.PointOnGrid(sf::Vector2f(gridcoords.x,gridcoords.y), true))
     {
+        printf("point on grid1\n");
         sf::Color target = grid.myGrid[gridcoords.y][gridcoords.x].getColour();
-        if( grid.myGrid[gridcoords.y][gridcoords.x].MouseInCell(sf::Vector2f(MousePos),ShapeWidth/2))
+        printf("targetcolour%i \n", target.toInteger());
+        if( grid.myGrid[gridcoords.y][gridcoords.x].MouseInCell(sf::Vector2f(MousePos),5))
         {
+            printf("mouse in cell -> %u\n", options.MainBrushColour.toInteger());
             if(options.MainBrushColour == target)
             {
+                printf("brush colour == target\n");
                 return;
             }
             std::vector<std::pair<int, int>> S;
             
             S.push_back(std::pair<int,int>(gridcoords.y,gridcoords.x));
-            
+            printf("Startwhile\n");
+            int i = 0;
             while(S.size() > 0)
             {
+                printf("while -> %i\n", i);
                 auto p = S.back();
                 S.pop_back();
                 int x = p.second;
                 int y = p.first;
-                if(grid.PointOnGrid(sf::Vector2f(x,y), false))
+                if(grid.PointOnGrid(sf::Vector2f(x,y), true))
                 {
+                    printf("point on grid2 -> %i\n",grid.myGrid[y][x].getColour().toInteger());
                     if(grid.myGrid[y][x].getColour() == target)
                     {
                         grid.SetCell(x, y, options.MainBrushColour);
-                        
+                        printf("setcell\n");
                         S.push_back({y-1,x});
                         
                         S.push_back({y,x-1});
@@ -51,9 +57,12 @@ void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOpt
                         
                     }
                 }
+                i++;
             }
         }
     }
+    
+    
 }
     void FillToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
     {

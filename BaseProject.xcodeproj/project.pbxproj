@@ -385,11 +385,11 @@
 		0B9766812312D5B6005DC725 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				0B9766852312DE47005DC725 /* BrushToolType.cpp */,
 				0B9766872312DF28005DC725 /* EraserToolType.cpp */,
 				0B9766882312DF28005DC725 /* FillToolType.cpp */,
 				0B9766892312DF28005DC725 /* NullToolType.cpp */,
 				0B9766832312D5C8005DC725 /* Tool.hpp */,
-				0B9766852312DE47005DC725 /* BrushToolType.cpp */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -420,7 +420,7 @@
 		0B3004C222B53812007515D0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Daniel Harvey";
 				TargetAttributes = {
 					0B3004C922B53812007515D0 = {
@@ -434,6 +434,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 0B3004C122B53812007515D0;
 			productRefGroup = 0B3004CB22B53812007515D0 /* Products */;
@@ -610,6 +611,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 24X23VJ266;
 				HEADER_SEARCH_PATHS = /usr/local/Cellar/sfml/2.5.1/include;
@@ -625,6 +627,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 24X23VJ266;
 				HEADER_SEARCH_PATHS = /usr/local/Cellar/sfml/2.5.1/include;

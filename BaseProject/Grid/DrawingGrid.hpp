@@ -54,7 +54,7 @@ private:
 	
 	bool Optimise = false;
     PaintOptions options; 
-    std::unique_ptr<ToolType> currentTool = std::make_unique<NullToolType>();
+    std::unique_ptr<ToolType> currentTool;
     
 };
 

@@ -15,12 +15,11 @@ void BrushToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOp
     auto ShapeHeight = options.shape.getGlobalBounds().height;
     auto ShapeWidth = options.shape.getGlobalBounds().width;
     
-
-    
     for(int yi = (options.shape.getGlobalBounds().top-grid.GridPosition.y); yi < ((options.shape.getGlobalBounds().top + ShapeHeight) - grid.GridPosition.y); yi++)
     {
         for(int xi = (options.shape.getGlobalBounds().left-grid.GridPosition.x); xi < ((options.shape.getGlobalBounds().left + ShapeWidth) - grid.GridPosition.x); xi++)
         {
+            
             //make sure we're inside a cell
             auto gridcoords = grid.ConverttoGrid({(float)xi,(float)yi}, true);
                         
@@ -28,8 +27,7 @@ void BrushToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOp
             {
                 if( grid.myGrid[gridcoords.y][gridcoords.x].MouseInCell(sf::Vector2f(MousePos),ShapeWidth/2))
                 {
-                    
-                    grid.myGrid[gridcoords.y][gridcoords.x].SetColour(options.MainBrushColour,false);
+                    grid.SetCell(gridcoords.x, gridcoords.y, options.MainBrushColour);
                 }
                 
             }

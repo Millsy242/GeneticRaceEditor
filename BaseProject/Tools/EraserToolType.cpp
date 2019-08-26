@@ -18,6 +18,7 @@ void EraserToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintO
     {
         for(int xi = (options.shape.getGlobalBounds().left-grid.GridPosition.x); xi < ((options.shape.getGlobalBounds().left + ShapeWidth) - grid.GridPosition.x); xi++)
         {
+            
             //make sure we're inside a cell
             auto gridcoords = grid.ConverttoGrid({(float)xi,(float)yi}, true);
             
@@ -31,6 +32,9 @@ void EraserToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintO
             }
         }
     }
+    
+    
+
 }
 void EraserToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
 {
