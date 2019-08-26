@@ -26,6 +26,7 @@ enum class Tool
     eErase
 };
 
+
 enum BrushShape
 {
     eCircle,
@@ -49,10 +50,27 @@ public:
     void SetCell(int xGrid, int yGrid, sf::Color colour);
     void SetBackgroundColour(sf::Color NewColour);
     
+    bool CheckMouseInCell(int x, int y, sf::Vector2f mouse, int radius);
     
+
     
     bool PointOnGrid(sf::Vector2f point, bool GridPos);
-    sf::Vector2i ConverttoGrid(sf::Vector2f point, bool GridPos); 
+    
+    template<typename T>
+    sf::Vector2i ConverttoGrid(sf::Vector2<T>point, bool GridPos)
+    {
+        if(!GridPos)
+        {
+            point.y = roundDown(point.y - GridPosition.y, CellH) / CellH;
+            point.x = roundDown(point.x - GridPosition.x, CellW) / CellW;
+        }
+        else
+        {
+            point.y = roundDown(point.y, CellH) / CellH;
+            point.x = roundDown(point.x, CellW) / CellW;
+        }
+        return sf::Vector2i((int)point.x,(int)point.y);
+    }
     
     bool isMouseOnGrid();
     
@@ -90,7 +108,14 @@ private:
     
     sf::Color TargetColour{sf::Color::White}, ReplaceColour{sf::Color::Black};
     
-    sf::RenderTexture rendertexture; 
+    sf::RenderTexture rendertexture;
+    
+    
+    
+    int roundDown(int n, int m)
+    {
+        return n >= 0 ? (n/m)*m : ((n-m+1)/m)*m;
+    }
   
     
 };

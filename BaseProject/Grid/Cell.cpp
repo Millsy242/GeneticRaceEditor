@@ -9,13 +9,13 @@
 #include "Cell.hpp"
 #include <iostream>
 
-Cell::Cell(int left, int top, int right, int base, int width, int height, unsigned int Cellnum) : Width(width), Height(height), Left(left), Top(top), Right(right), Base(base), active(true),TextureRect(left,top,width,height),Colour(sf::Color::Black), CellNumber(Cellnum)
+Cell::Cell(int left, int top, int right, int base, int width, int height, unsigned int Cellnum) : Width(width), Height(height), Left(left), Top(top), Right(right), Base(base), active(true),TextureRect(left,top,width,height),Colour(sf::Color::Black), CellNumber(Cellnum), cell(sf::FloatRect(Left,Top,Width,Height))
 {
-	sf::FloatRect cell = sf::FloatRect(Left,Top,Width,Height);
+	 
 }
 bool Cell::MouseInCell(sf::Vector2f MousePosition)
 {
-    if(MousePosition.x > Left && MousePosition.x < Right && MousePosition.y > Top && MousePosition.y < Base)
+    if(cell.contains(MousePosition.x,MousePosition.y))
         return true;
         
     return false;

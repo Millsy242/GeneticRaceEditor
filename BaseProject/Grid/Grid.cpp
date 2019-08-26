@@ -14,10 +14,7 @@
 //When Rendering to a render texture, "screen position" is reset to 0,0, rather than the position of the RenderTexture in window space.
 //This makes working things out a lot easier! as well as being more efficient! YAY smart
 
-int roundDown(int n, int m)
-{
-    return n >= 0 ? (n/m)*m : ((n-m+1)/m)*m;
-}
+
 
 void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int cellH)
 {
@@ -87,19 +84,9 @@ void Grid::SetupGrid(sf::Vector2f gridPos, sf::Image Image, int cellW, int cellH
     SetupGrid(gridPos, Image.getSize().x * cellW, Image.getSize().y * cellH, cellW, cellH);
     LoadFromImage(Image);
 }
-sf::Vector2i Grid::ConverttoGrid(sf::Vector2f point, bool GridPos)
+bool Grid::CheckMouseInCell(int x, int y, sf::Vector2f mouse, int radius)
 {
-    if(!GridPos)
-    {
-        point.y = roundDown(point.y - GridPosition.y, CellH) / CellH;
-        point.x = roundDown(point.x - GridPosition.x, CellW) / CellW;
-    }
-    else
-    {
-        point.y = roundDown(point.y, CellH) / CellH;
-        point.x = roundDown(point.x, CellW) / CellW;
-    }
-    return sf::Vector2i((int)point.x,(int)point.y);
+    return myGrid[y][x].MouseInCell(mouse,radius);
 }
 bool Grid::PointOnGrid(sf::Vector2f point, bool GridPos)
 {
@@ -113,14 +100,11 @@ bool Grid::PointOnGrid(sf::Vector2f point, bool GridPos)
         point.y = roundDown(point.y, CellH) / CellH;
         point.x = roundDown(point.x, CellW) / CellW;
     }
-    if(point.y < 0 )
+    if(point.y < 0 || point.y > NumRow)
         return false;
-    if(point.x< 0)
+    if(point.x < 0 || point.x > NumCol)
         return false;
-    if(point.y>NumRow)
-        return false;
-    if(point.x>NumCol)
-        return false;
+
     
     return true;
 }

@@ -17,44 +17,40 @@ void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOpt
     
     if(grid.PointOnGrid(sf::Vector2f(gridcoords.x,gridcoords.y), true))
     {
-        printf("point on grid1\n");
         sf::Color target = grid.myGrid[gridcoords.y][gridcoords.x].getColour();
-        printf("targetcolour%i \n", target.toInteger());
-        if( grid.myGrid[gridcoords.y][gridcoords.x].MouseInCell(sf::Vector2f(MousePos),5))
+       if( grid.myGrid[gridcoords.y][gridcoords.x].MouseInCell(sf::Vector2f(MousePos),5))
         {
-            printf("mouse in cell -> %u\n", options.MainBrushColour.toInteger());
             if(options.MainBrushColour == target)
             {
-                printf("brush colour == target\n");
                 return;
             }
             std::vector<std::pair<int, int>> S;
             
             S.push_back(std::pair<int,int>(gridcoords.y,gridcoords.x));
-            printf("Startwhile\n");
+         
             int i = 0;
             while(S.size() > 0)
             {
-                printf("while -> %i\n", i);
+         
                 auto p = S.back();
                 S.pop_back();
                 int x = p.second;
                 int y = p.first;
                 if(grid.PointOnGrid(sf::Vector2f(x,y), true))
                 {
-                    printf("point on grid2 -> %i\n",grid.myGrid[y][x].getColour().toInteger());
+         
                     if(grid.myGrid[y][x].getColour() == target)
                     {
                         grid.SetCell(x, y, options.MainBrushColour);
-                        printf("setcell\n");
-                        S.push_back({y-1,x});
-                        
-                        S.push_back({y,x-1});
-                        
-                        S.push_back({y+1,x});
-                        
-                        S.push_back({y,x+1});
-                        
+         
+                        if(y-1 >= 0 )
+                            S.push_back({y-1,x});
+                        if(x-1 >= 0)
+                            S.push_back({y,x-1});
+                        if(y+1<grid.NumRow)
+                            S.push_back({y+1,x});
+                        if(x+1<grid.NumCol)
+                            S.push_back({y,x+1});
                     }
                 }
                 i++;
