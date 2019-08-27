@@ -38,6 +38,7 @@ public:
     void Input();
     void Save();
     void Load(std::string filename);
+    void LoadSaveThread(); 
     
 private:
 	const double Version = 0.45; 

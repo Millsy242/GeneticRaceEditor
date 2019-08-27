@@ -30,6 +30,7 @@ public:
     virtual void OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options) = 0;
     virtual void OnMouseMove(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options) = 0;
     virtual void RenderPreview(Window &window){};
+    virtual ~ToolType(){};
 };
 
 class BrushToolType : public ToolType

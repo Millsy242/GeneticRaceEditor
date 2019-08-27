@@ -6,18 +6,16 @@
 //  Copyright © 2019 Daniel Harvey. All rights reserved.
 //
 
-#include <SFML/Graphics.hpp>
+
 #include <vector>
 #include <iostream>
 #include "Game.hpp"
-#include "imgui.h"
-#include "imgui-SFML.h"
+
 
 int main()
 {
     Game g;
     g.Start();
     g.Update();
-    return 0;
-	
+    return 0;	
 }
