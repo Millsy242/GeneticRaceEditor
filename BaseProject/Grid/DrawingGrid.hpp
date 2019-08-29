@@ -41,7 +41,7 @@ private:
     
     bool IsShown = false; 
     
-    
+    std::thread mythread;
     
     
 	sf::CircleShape pointerSquare;

@@ -8,7 +8,7 @@
 
 #include "Grid.hpp"
 #include <iostream>
-#include  <queue>
+
 
 //Please note: because we now render to a sf::RenderTexture; it is no longer required to use grid position as an offset.
 //When Rendering to a render texture, "screen position" is reset to 0,0, rather than the position of the RenderTexture in window space.
@@ -32,6 +32,8 @@ void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int 
     NumRow = (Height/CellH);
     NumCol = (Width/CellW);
     
+    
+    
     myGrid.clear();
     
     for(int y{0}; y< NumRow; y++)
@@ -48,6 +50,7 @@ void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int 
             c.SetColour(sf::Color::Black);
             row.push_back(c);
             TotalSize++;
+            updatethesecells.push_back({x,y});
             // std::cout<<"Cell #" << TotalSize << "\nX = " << left << " Y = " << top << "\nRow = " << y << " Column = " << x << "\n\n\n";
         }
         myGrid.push_back(row);
@@ -120,6 +123,7 @@ void Grid::SetBackgroundColour(sf::Color NewColour)
             if(myGrid[y][x].backgroundColour)
             {
                 myGrid[y][x].SetColour(GridBackground);
+                updatethesecells.push_back({x,y});
             }
         }
     }
@@ -137,7 +141,7 @@ if(y < 0 )
 		y=NumRow;
 	if(x>NumCol)
 		x=NumCol;
-	
+	updatethesecells.push_back({x,y});
     myGrid[y][x].SetColour(colour);
     Changed = true;
 }
@@ -152,15 +156,18 @@ void Grid::SetCell(int xGrid, int yGrid, sf::Color colour)
 		yGrid=NumRow;
 	if(xGrid>NumCol)
 		xGrid=NumCol;
-	
+	updatethesecells.push_back({xGrid,yGrid});
     this->myGrid.at(yGrid).at(xGrid).SetColour(colour);
     Changed = true;
 }
-
+//the idea behind the change here is to edit an image instead of drawing loads and loads of tiny sprites
 void Grid::Render(Window &window, bool isshown)
 {
+    
     //This function is very inefficient!
     //please optimise
+    /*
+    
     if(Changed )
     {
         rendertexture.clear();
@@ -171,7 +178,7 @@ void Grid::Render(Window &window, bool isshown)
                 int gridy = myGrid[y][x].Top;
                 int gridx = myGrid[y][x].Left;
                 
-                //gridSprite.setTextureRect(myGrid[y][x].TextureRect);
+                
                 gridSprite.setPosition(gridx, gridy);
                 gridSprite.setColor(myGrid[y][x].getColour());
                 
@@ -179,10 +186,40 @@ void Grid::Render(Window &window, bool isshown)
             }
         }
     }
+     */
+
+    
+    if(updatethesecells.size() != 0)
+    {
+        renderimage = rendertexture.getTexture().copyToImage();
+        rendertexture.clear();
+        
+        
+        for(int i {0}; i<updatethesecells.size(); i++)
+        {
+            int gridx = myGrid[updatethesecells[i].y][updatethesecells[i].x].Left;
+            int gridy = myGrid[updatethesecells[i].y][updatethesecells[i].x].Top;
+            
+           // gridSprite.setPosition(gridx, gridy);
+           // gridSprite.setColor(myGrid[updatethesecells[i].y][updatethesecells[i].x].getColour());
+            renderimage.setPixel(gridx,gridy,myGrid[updatethesecells[i].y][updatethesecells[i].x].getColour());
+        }
+    }
+    updatethesecells.clear();
+     sf::Texture texture;
+    
+    
+    texture.loadFromImage(renderimage);
+    sf::Sprite me(texture);
+    
+    rendertexture.draw(me);
+
+    sf::Sprite sprite(rendertexture.getTexture());
+    
     
     rendertexture.display();
     
-    sf::Sprite sprite(rendertexture.getTexture());
+   
     sprite.setPosition(GridPosition);
     window.SFwindow.draw(sprite);
     Changed = false;

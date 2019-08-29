@@ -116,6 +116,7 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             auto mp = mousepos - (sf::Vector2i)getGrid()->GridPosition;
+           
             currentTool->OnMouseDown(mp, grid, options);
         }
     }

@@ -17,6 +17,7 @@
 #include <thread>
 #include "SelbaWard.hpp"
 
+
 enum class Tool
 {
     eNull,
@@ -89,6 +90,7 @@ public:
     
       sf::Vector2f GridPosition;
      std::vector<std::vector<Cell>> myGrid;
+    std::vector<sf::Vector2i> updatethesecells;
     
 private:
     
@@ -98,7 +100,7 @@ private:
     
     unsigned int temp = 0; 
     
-  
+    
     
     sf::Texture gridTexture;
     sf::Sprite gridSprite;
@@ -109,6 +111,8 @@ private:
     sf::Color TargetColour{sf::Color::White}, ReplaceColour{sf::Color::Black};
     
     sf::RenderTexture rendertexture;
+    
+    sf::Image renderimage; 
     
     
     
