@@ -127,7 +127,7 @@ void DrawingGrid::Render(Window *window)
     grid.Render(*window,IsShown);
     if(IsShown)
     {    
-        if(grid.isMouseOnGrid())
+        //if(grid.isMouseOnGrid())
         {
             window->draw(GetPointer());
             switch (SelectedTool)
@@ -151,11 +151,12 @@ void DrawingGrid::Render(Window *window)
             
             window->SFwindow.setMouseCursor(cursor);
         }
+        /*
         else
         {
             cursor.loadFromSystem(sf::Cursor::Arrow);
             window->SFwindow.setMouseCursor(cursor);
-        }
+        }            */
     }
     else
     {
@@ -212,7 +213,8 @@ Grid* DrawingGrid::getGrid()
     return &grid;
 }
 void DrawingGrid::Serialise(Yaml::Node &root, sw::ProgressBar &bar)
-{
+{/*
+
 	std::string Data = "";
 
 	Data += "Cell Width: " + std::to_string(grid.CellW) + "\n"
@@ -244,6 +246,6 @@ void DrawingGrid::Serialise(Yaml::Node &root, sw::ProgressBar &bar)
 		
 	}
 	
-
+  */
 	
 }

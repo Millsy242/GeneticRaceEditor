@@ -12,6 +12,51 @@
 
 void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
 {
+    auto ShapeHeight = options.shape.getGlobalBounds().height;
+    auto ShapeWidth = options.shape.getGlobalBounds().width;
+    
+    sf::Vector2f Mouse = (sf::Vector2f)MousePos - grid.GridPosition;
+    sf::Color target = grid.GetPixel(Mouse);
+    if(options.MainBrushColour == target)
+    {
+        return;
+    }
+    std::vector<std::pair<int, int>> S;
+    
+    S.push_back(std::pair<int,int>(Mouse.y,Mouse.x));
+    
+    int i = 0;
+    while(S.size() > 0)
+    {
+        
+        auto p = S.back();
+        S.pop_back();
+        int x = p.second;
+        int y = p.first;
+        //if(grid.PointOnGrid(sf::Vector2f(x,y), true))
+        {
+            
+            if(grid.GetPixel(sf::Vector2f(x, y)) == target)
+            {
+                grid.SetCell(sf::Vector2f(x, y), options.MainBrushColour);
+                
+                if(y-1 >= 0 )
+                    S.push_back({y-1,x});
+                if(x-1 >= 0)
+                    S.push_back({y,x-1});
+                if(y+1<grid.Width)
+                    S.push_back({y+1,x});
+                if(x+1<grid.Height)
+                    S.push_back({y,x+1});
+            }
+        }
+        i++;
+
+            
+    }
+}
+    /*
+
     //make sure we're inside a cell
     auto gridcoords = grid.ConverttoGrid(sf::Vector2f(MousePos), true);
     
@@ -57,9 +102,9 @@ void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOpt
             }
         }
     }
+         */
     
-    
-}
+
     void FillToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
     {
         

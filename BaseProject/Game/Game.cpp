@@ -255,7 +255,7 @@ void Game::Load(std::string filename)
     bar.setPercentage(bar.getPercentage()+1);
     savingtext.setString("Setting Up Grid");
     Grid.Start(width, height, 400, 0, cellwidth, cellheight);
-    Grid.getGrid()->SetBackgroundColour(sf::Color(BackgroundColour));
+    //Grid.getGrid()->SetBackgroundColour(sf::Color(BackgroundColour));
     
     
     
@@ -275,7 +275,7 @@ void Game::Load(std::string filename)
                 x = root[name + "X"].As<int>();
                 y = root[name + "Y"].As<int>();
                 colour = root[name + "C"].As<u_int32_t>();
-                Grid.getGrid()->SetCell(x, y, sf::Color(colour));
+              //  Grid.getGrid()->SetCell(x, y, sf::Color(colour));
             }
         };
         

@@ -9,72 +9,38 @@
 #include "Grid.hpp"
 #include <iostream>
 
-
-//Please note: because we now render to a sf::RenderTexture; it is no longer required to use grid position as an offset.
-//When Rendering to a render texture, "screen position" is reset to 0,0, rather than the position of the RenderTexture in window space.
-//This makes working things out a lot easier! as well as being more efficient! YAY smart
-
-
-
 void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int cellH)
 {
-    for(int i{0}; i < myGrid.size(); i++)
-    {
-        myGrid[i].clear();
-    }
-    myGrid.clear(); 
-    
     Width =  width;
     Height = height;
-    CellW = cellW;
-    CellH = cellH;
     GridPosition = gridPos;
-    NumRow = (Height/CellH);
-    NumCol = (Width/CellW);
     
-    
-    
-    myGrid.clear();
-    
-    for(int y{0}; y< NumRow; y++)
-    {
-        std::vector<Cell> row;
-        
-        for(int x{0}; x< NumCol ; x++)
-        {
-            int left =  x * CellW;
-            int top =  y * CellH;
-            int right =  left + CellW;
-            int base = top + CellH ;
-            Cell c(left, top, right, base, CellW, CellH, TotalSize);
-            c.SetColour(sf::Color::Black);
-            row.push_back(c);
-            TotalSize++;
-            updatethesecells.push_back({x,y});
-            // std::cout<<"Cell #" << TotalSize << "\nX = " << left << " Y = " << top << "\nRow = " << y << " Column = " << x << "\n\n\n";
-        }
-        myGrid.push_back(row);
-    }
-    NumRow--;
-    NumCol--;
-	
-	gridTexture.create(cellW, cellH);
-	std::vector<sf::Uint8> pix;
-	for(int x{0}; x < cellW*4; x++)
-	{
-		for(int y{0}; y < cellH; y++)
-		{
-			pix.push_back(255);
-		}
-	}
-	gridTexture.update(pix.data());
-	
-    gridSprite.setTexture(gridTexture);
-    
-    rendertexture.create(Width, Height);
-    MouseOnGrid = true;
-    
+    renderimage.create(width, height,sf::Color::Green);
+    canvasTexture.create(width, height);
+    canvasTexture.loadFromImage(renderimage);
+    canvas.setTexture(&canvasTexture);
+    canvas.setPosition(GridPosition);
+    canvas.setSize(sf::Vector2f(width,height));
 }
+void Grid::SetCell(sf::Vector2f pos, sf::Color colour)
+{
+    renderimage.setPixel(pos.x, pos.y, colour);
+}
+sf::Color Grid::GetPixel(sf::Vector2f pos)
+{
+    return renderimage.getPixel(pos.x, pos.y);
+}
+
+//the idea behind the change here is to edit an image instead of drawing loads and loads of tiny sprites
+void Grid::Render(Window &window, bool isshown)
+{
+    canvasTexture.loadFromImage(renderimage);
+    canvas.setTexture(&canvasTexture);
+    
+    window.draw(canvas);
+}
+/*
+
 void Grid::SetupGrid(sf::Vector2f gridPos, std::string ImagePath, int cellW, int cellH)
 {
     sf::Image tempImage;
@@ -128,107 +94,12 @@ void Grid::SetBackgroundColour(sf::Color NewColour)
         }
     }
 }
+ */
 
-void Grid::SetCell(sf::Vector2f pos, sf::Color colour)
-{
-    int y = roundDown(pos.y - GridPosition.y, CellH) / CellH;
-    int x = roundDown(pos.x - GridPosition.x, CellW) / CellW;
-if(y < 0 )
-	y=0;
-	if(x< 0)
-		x=0;
-	if(y>NumRow)
-		y=NumRow;
-	if(x>NumCol)
-		x=NumCol;
-	updatethesecells.push_back({x,y});
-    myGrid[y][x].SetColour(colour);
-    Changed = true;
-}
-void Grid::SetCell(int xGrid, int yGrid, sf::Color colour)
-{
-	
-	if(yGrid < 0 )
-		yGrid=0;
-	if(xGrid< 0)
-		xGrid=0;
-	if(yGrid>NumRow)
-		yGrid=NumRow;
-	if(xGrid>NumCol)
-		xGrid=NumCol;
-	updatethesecells.push_back({xGrid,yGrid});
-    this->myGrid.at(yGrid).at(xGrid).SetColour(colour);
-    Changed = true;
-}
-//the idea behind the change here is to edit an image instead of drawing loads and loads of tiny sprites
-void Grid::Render(Window &window, bool isshown)
-{
-    
-    //This function is very inefficient!
-    //please optimise
-    /*
-    
-    if(Changed )
-    {
-        rendertexture.clear();
-        for(int y{0}; y< NumRow; y++)
-        {
-            for(int x{0}; x< NumCol ; x++)
-            {
-                int gridy = myGrid[y][x].Top;
-                int gridx = myGrid[y][x].Left;
-                
-                
-                gridSprite.setPosition(gridx, gridy);
-                gridSprite.setColor(myGrid[y][x].getColour());
-                
-                rendertexture.draw(gridSprite);
-            }
-        }
-    }
-     */
 
-    
-    if(updatethesecells.size() != 0)
-    {
-        renderimage = rendertexture.getTexture().copyToImage();
-        rendertexture.clear();
-        
-        
-        for(int i {0}; i<updatethesecells.size(); i++)
-        {
-            int gridx = myGrid[updatethesecells[i].y][updatethesecells[i].x].Left;
-            int gridy = myGrid[updatethesecells[i].y][updatethesecells[i].x].Top;
-            
-           // gridSprite.setPosition(gridx, gridy);
-           // gridSprite.setColor(myGrid[updatethesecells[i].y][updatethesecells[i].x].getColour());
-            renderimage.setPixel(gridx,gridy,myGrid[updatethesecells[i].y][updatethesecells[i].x].getColour());
-        }
-    }
-    updatethesecells.clear();
-     sf::Texture texture;
-    
-    
-    texture.loadFromImage(renderimage);
-    sf::Sprite me(texture);
-    
-    rendertexture.draw(me);
 
-    sf::Sprite sprite(rendertexture.getTexture());
-    
-    
-    rendertexture.display();
-    
-   
-    sprite.setPosition(GridPosition);
-    window.SFwindow.draw(sprite);
-    Changed = false;
-}
-
-bool Grid::isMouseOnGrid()
-{
-    return MouseOnGrid;
-}
+/*
+ 
 bool Grid::LoadFromImage(sf::Image image)
 {
     Changed = true;
@@ -285,9 +156,6 @@ void Grid::SaveToFile(std::string &data, sw::ProgressBar &bar)
 				}
             numcomplete++;
             bar.setPercentage(currentbar + ((numcomplete/TotalSize)*10));
-            
-            
-            
 		}
 	}
 }
@@ -300,9 +168,10 @@ bool Grid::LoadFromImage(std::string ImageFilepath)
     else
         return false;
 }
+ 
 void Grid::LoadFromFile(std::string FileName)
 {
-	/*
+
 	 
     Changed = true;
     std::string line;
@@ -352,8 +221,9 @@ void Grid::LoadFromFile(std::string FileName)
         }
         myfile.close();
     }
-	 */
+ 
 }
+ */
 //|| (brushshape == BrushShape::eSquare &&      myGrid[y][x].MouseInCell(Mouse,sf::FloatRect(shape->getGlobalBounds().left - GridPosition.x,shape->getGlobalBounds().top- GridPosition.y,(shape->getGlobalBounds().left + ShapeWidth) - GridPosition.x,(shape->getGlobalBounds().top + ShapeHeight)- GridPosition.y)))
 
 

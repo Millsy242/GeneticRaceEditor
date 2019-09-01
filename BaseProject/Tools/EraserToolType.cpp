@@ -11,7 +11,6 @@
 
 void EraserToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
 {
-
     auto ShapeHeight = options.shape.getGlobalBounds().height;
     auto ShapeWidth = options.shape.getGlobalBounds().width;
     
@@ -19,29 +18,16 @@ void EraserToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintO
     {
         for(int xi = (options.shape.getGlobalBounds().left-grid.GridPosition.x); xi < ((options.shape.getGlobalBounds().left + ShapeWidth) - grid.GridPosition.x); xi++)
         {
+            //int DX = MousePos.x - std::max(MousePos.x, std::min(MousePos.x, int(MousePos.x+ShapeWidth)) );
+            //int DY = MousePos.y - std::max(MousePos.y, std::min(MousePos.y, int(MousePos.y+ShapeHeight)) );
+            //int dx = std::abs(MousePos.x - MousePos.x+ShapeWidth);
+            //int dy = std::abs(MousePos.y - MousePos.y+ShapeHeight);
             
-            //make sure we're inside a cell
-            auto gridcoords = grid.ConverttoGrid(sf::Vector2i(xi,yi), true);
-            int x = gridcoords.x;
-            int y = gridcoords.y;
-            
-            if(y < 0 )
-                y = 1;
-            if(x < 0)
-                x = 1;
-            if(y>grid.NumRow)
-                y = grid.NumRow;
-            if(x>grid.NumCol)
-                x = grid.NumCol;
-            
-            sf::Vector2f m(MousePos.x,MousePos.y);
-            if( grid.CheckMouseInCell(x,y,m,ShapeWidth/2))
-            {
-                 grid.SetCell(gridcoords.x,gridcoords.y, grid.GridBackground);
-            }
+            //if((DX * DX + DY * DY) < (options.BrushSize * options.BrushSize))
+            //if(std::sqrt(dx * dx + dy * dy) <= options.shape.getRadius())
+            grid.SetCell(sf::Vector2f(xi,yi), grid.GridBackground);
         }
     }
-    
 
 }
 void EraserToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)

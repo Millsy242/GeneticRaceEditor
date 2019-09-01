@@ -41,22 +41,23 @@ public:
     ~Grid() = default;
     
     void SetupGrid(sf::Vector2f gridPos, int width, int height, int cellW, int cellH);
-    void SetupGrid(sf::Vector2f gridPos, std::string ImagePath, int cellW=1, int cellH=1);
-    void SetupGrid(sf::Vector2f gridPos, sf::Image Image, int cellW=1, int cellH=1);
+    //void SetupGrid(sf::Vector2f gridPos, std::string ImagePath, int cellW=1, int cellH=1);
+    //void SetupGrid(sf::Vector2f gridPos, sf::Image Image, int cellW=1, int cellH=1);
     
-    
+    bool PointOnCanvas(sf::Vector2f Pos);
     void Render(Window &window, bool isshown = true);
-    
+    sf::Color GetPixel(sf::Vector2f pos);
     void SetCell(sf::Vector2f pos, sf::Color colour);
-    void SetCell(int xGrid, int yGrid, sf::Color colour);
-    void SetBackgroundColour(sf::Color NewColour);
+   // void SetCell(int xGrid, int yGrid, sf::Color colour);
+   // void SetBackgroundColour(sf::Color NewColour);
     
-    bool CheckMouseInCell(int x, int y, sf::Vector2f mouse, int radius);
+  //  bool CheckMouseInCell(int x, int y, sf::Vector2f mouse, int radius);
     
 
     
-    bool PointOnGrid(sf::Vector2f point, bool GridPos);
-    
+  //  bool PointOnGrid(sf::Vector2f point, bool GridPos);
+    /*
+
     template<typename T>
     sf::Vector2i ConverttoGrid(sf::Vector2<T>point, bool GridPos)
     {
@@ -72,25 +73,25 @@ public:
         }
         return sf::Vector2i((int)point.x,(int)point.y);
     }
+         */
+    //bool isMouseOnGrid();
     
-    bool isMouseOnGrid();
+   // bool LoadFromImage(sf::Image image);
+   // bool LoadFromImage(std::string ImageFilepath);
     
-    bool LoadFromImage(sf::Image image);
-    bool LoadFromImage(std::string ImageFilepath);
+   // void LoadFromFile(std::string FileName);
     
-    void LoadFromFile(std::string FileName);
-    
-    void SaveToFile(std::string &data, sw::ProgressBar &bar);
+  //  void SaveToFile(std::string &data, sw::ProgressBar &bar);
     
     bool Changed = true;
 	
-	 int Width,  Height,  CellW,  CellH, NumRow,NumCol;
+    int Width,  Height;//,  CellW,  CellH, NumRow,NumCol;
 	unsigned int TotalSize;
 	 sf::Color GridBackground;
     
       sf::Vector2f GridPosition;
-     std::vector<std::vector<Cell>> myGrid;
-    std::vector<sf::Vector2i> updatethesecells;
+     //std::vector<std::vector<Cell>> myGrid;
+   //std::vector<sf::Vector2i> updatethesecells;
     
 private:
     
@@ -112,7 +113,9 @@ private:
     
     sf::RenderTexture rendertexture;
     
-    sf::Image renderimage; 
+    sf::Image renderimage;
+    sf::RectangleShape canvas;
+    sf::Texture canvasTexture; 
     
     
     
