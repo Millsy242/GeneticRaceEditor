@@ -24,14 +24,24 @@ void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int 
 }
 void Grid::SetCell(sf::Vector2f pos, sf::Color colour)
 {
-    renderimage.setPixel(pos.x, pos.y, colour);
+    if(PointOnCanvas(pos))
+        renderimage.setPixel(pos.x, pos.y, colour);
 }
 sf::Color Grid::GetPixel(sf::Vector2f pos)
 {
-    return renderimage.getPixel(pos.x, pos.y);
+    if(PointOnCanvas(pos))
+        return renderimage.getPixel(pos.x, pos.y);
+    
+    std::cerr << "oops this point isnt on the canvas" <<std::endl;
+    return sf::Color::Black;
 }
-
-//the idea behind the change here is to edit an image instead of drawing loads and loads of tiny sprites
+bool Grid::PointOnCanvas(sf::Vector2f pos)
+{
+    if(canvas.getGlobalBounds().contains(pos))
+        return true;
+    else
+        return false;
+}
 void Grid::Render(Window &window, bool isshown)
 {
     canvasTexture.loadFromImage(renderimage);

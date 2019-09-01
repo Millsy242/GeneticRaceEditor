@@ -14,21 +14,14 @@
 
 void BrushToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
 {
-    auto ShapeHeight = options.shape.getGlobalBounds().height;
-    auto ShapeWidth = options.shape.getGlobalBounds().width;
-    
-    for(int yi = (options.shape.getGlobalBounds().top-grid.GridPosition.y); yi < ((options.shape.getGlobalBounds().top + ShapeHeight) - grid.GridPosition.y); yi++)
+    for(int y=-options.BrushSize; y<=options.BrushSize; y++)
     {
-        for(int xi = (options.shape.getGlobalBounds().left-grid.GridPosition.x); xi < ((options.shape.getGlobalBounds().left + ShapeWidth) - grid.GridPosition.x); xi++)
+        for(int x=-options.BrushSize; x<=options.BrushSize; x++)
         {
-            //int DX = MousePos.x - std::max(MousePos.x, std::min(MousePos.x, int(MousePos.x+ShapeWidth)) );
-            //int DY = MousePos.y - std::max(MousePos.y, std::min(MousePos.y, int(MousePos.y+ShapeHeight)) );
-            //int dx = std::abs(MousePos.x - MousePos.x+ShapeWidth);
-            //int dy = std::abs(MousePos.y - MousePos.y+ShapeHeight);
-            
-            //if((DX * DX + DY * DY) < (options.BrushSize * options.BrushSize))
-            //if(std::sqrt(dx * dx + dy * dy) <= options.shape.getRadius())
-                grid.SetCell(sf::Vector2f(xi,yi), options.MainBrushColour);
+            if(x*x+y*y <= options.BrushSize*options.BrushSize)
+            {
+                grid.SetCell(sf::Vector2f(MousePos.x+x,MousePos.y+y), options.MainBrushColour);
+            }
         }
     }
 }

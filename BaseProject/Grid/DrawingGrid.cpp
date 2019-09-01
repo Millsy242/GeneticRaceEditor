@@ -20,7 +20,7 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
     grid.SetupGrid({offsetx,offsety}, width, height, cellW,cellH);
     options.shape.setRadius(options.BrushSize);
     options.shape.setFillColor(sf::Color::Transparent);
-    options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
+    options.shape.setOrigin(options.shape.getLocalBounds().width-0.5, options.shape.getLocalBounds().height-0.5);
     options.shape.setPointCount(2000);
     options.shape.setOutlineThickness(3);
     options.shape.setOutlineColor(sf::Color::Magenta);
@@ -51,8 +51,8 @@ void DrawingGrid::UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i Mous
 	pointerSquare.setRadius(options.BrushSize);
 	if(ReCenter)
 	{
-		options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
-		pointerSquare.setOrigin(pointerSquare.getLocalBounds().width/2, pointerSquare.getLocalBounds().height/2);
+		options.shape.setOrigin(options.shape.getLocalBounds().width-0.5, options.shape.getLocalBounds().height-0.5);
+        pointerSquare.setOrigin(options.shape.getLocalBounds().width-0.5, options.shape.getLocalBounds().height-0.5);
 	}
 	if(MousePos != sf::Vector2i(-1,-1))
 	{
@@ -109,7 +109,7 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 	
 	ImGui::End();
 
-	UpdatePointers(options.BrushSize, false, mousepos);
+	UpdatePointers(options.BrushSize, true, mousepos);
 	
     if(!ImGui::IsAnyWindowHovered()) //Allow ImGui Windows to be above grid whilst also not drawing on grid
     {

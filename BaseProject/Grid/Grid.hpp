@@ -55,7 +55,7 @@ public:
     
 
     
-  //  bool PointOnGrid(sf::Vector2f point, bool GridPos);
+    
     /*
 
     template<typename T>
