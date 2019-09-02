@@ -87,8 +87,16 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 		SelectedTool = Tool::eFill;
     currentTool = std::make_unique<FillToolType>();
     }
-//	if(ImGui::Button("Pick"))
-	//	 SelectedTool = Tool::eColourPick;
+	if(ImGui::Button("Pick"))
+    {
+		 SelectedTool = Tool::eColourPick;
+        currentTool = std::make_unique<PickerToolType>();
+    }
+    if(ImGui::Button("Spray"))
+    {
+        SelectedTool = Tool::eSpray;
+        currentTool = std::make_unique<SprayToolType>();
+    }
 	if(ImGui::Button("Erase"))
     {
 		 SelectedTool = Tool::eErase;
@@ -114,7 +122,7 @@ void DrawingGrid::Controls()
     {
         if(!updatinggrid)
         {
-            if(!imguiHovered) //Allow ImGui Windows to be above grid whilst also not drawing on grid
+            if(!imguiHovered && grid.PointOnCanvas(sf::Vector2f(MousePos),false)) //Allow ImGui Windows to be above grid whilst also not drawing on grid
             {
                 if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
@@ -150,6 +158,8 @@ void DrawingGrid::Render(Window *window)
                     break;
                 case Tool::eErase:
                     cursor.loadFromSystem(sf::Cursor::SizeVertical);
+                    break;
+                default:
                     break;
             }
             

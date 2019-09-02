@@ -13,9 +13,8 @@
 #include <thread>
 
 
-void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
 {
-
         sf::Color target = grid.GetPixel(sf::Vector2f(MousePos));
         if(options.MainBrushColour == target)
         {
@@ -50,11 +49,11 @@ void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOpt
 
 }
 
-void FillToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+void FillToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
 {
     
 }
-void FillToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+void FillToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
 {
     
 }

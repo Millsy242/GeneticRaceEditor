@@ -14,6 +14,24 @@
 #include "Grid.hpp"
 #include "SelbaWard.hpp"
 #include "Yaml.hpp"
+
+
+enum class Tool
+{
+    eNull,
+    eBrush,
+    eFill,
+    eColourPick,
+    eSpray,
+    eErase
+};
+
+
+enum BrushShape
+{
+    eCircle,
+    eSquare
+};
 class Track;
 class DrawingGrid
 {

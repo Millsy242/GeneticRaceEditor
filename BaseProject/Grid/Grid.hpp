@@ -18,21 +18,6 @@
 #include "SelbaWard.hpp"
 
 
-enum class Tool
-{
-    eNull,
-    eBrush,
-    eFill,
-    eColourPick,
-    eErase
-};
-
-
-enum BrushShape
-{
-    eCircle,
-    eSquare
-};
 
 class Grid
 {
@@ -44,7 +29,7 @@ public:
     //void SetupGrid(sf::Vector2f gridPos, std::string ImagePath, int cellW=1, int cellH=1);
     //void SetupGrid(sf::Vector2f gridPos, sf::Image Image, int cellW=1, int cellH=1);
     
-    bool PointOnCanvas(sf::Vector2f Pos);
+    bool PointOnCanvas(sf::Vector2f Pos, bool adjustme = true);
     void Render(Window &window, bool isshown = true);
     sf::Color GetPixel(sf::Vector2f pos);
     void SetCell(sf::Vector2f pos, sf::Color colour);

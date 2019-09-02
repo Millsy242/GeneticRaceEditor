@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "Tool.hpp"
 
-void EraserToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+void EraserToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
 {
     for(int y=-options.BrushSize; y<=options.BrushSize; y++)
     {
@@ -28,11 +28,11 @@ void EraserToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintO
         }
     }
 }
-void EraserToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+void EraserToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
 {
     
 }
-void EraserToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+void EraserToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
 {
     
 }

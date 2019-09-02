@@ -10,10 +10,13 @@
 #include <vector>
 #include <iostream>
 #include "Game.hpp"
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>
 
 
 int main()
 {
+    srand ((unsigned int)time(NULL));
     Game g;
     g.Start();
     g.Update();

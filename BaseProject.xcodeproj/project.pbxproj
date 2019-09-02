@@ -52,6 +52,8 @@
 		0B97668A2312DF28005DC725 /* EraserToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9766872312DF28005DC725 /* EraserToolType.cpp */; };
 		0B97668B2312DF28005DC725 /* FillToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9766882312DF28005DC725 /* FillToolType.cpp */; };
 		0B97668C2312DF28005DC725 /* NullToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9766892312DF28005DC725 /* NullToolType.cpp */; };
+		0BCA6179231DA8DE0026B543 /* SprayToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA6178231DA8DE0026B543 /* SprayToolType.cpp */; };
+		0BCA617B231DA9D00026B543 /* PickerToolType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA617A231DA9D00026B543 /* PickerToolType.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -162,6 +164,8 @@
 		0B9766872312DF28005DC725 /* EraserToolType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EraserToolType.cpp; sourceTree = "<group>"; };
 		0B9766882312DF28005DC725 /* FillToolType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FillToolType.cpp; sourceTree = "<group>"; };
 		0B9766892312DF28005DC725 /* NullToolType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NullToolType.cpp; sourceTree = "<group>"; };
+		0BCA6178231DA8DE0026B543 /* SprayToolType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SprayToolType.cpp; sourceTree = "<group>"; };
+		0BCA617A231DA9D00026B543 /* PickerToolType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PickerToolType.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,10 +389,12 @@
 		0B9766812312D5B6005DC725 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				0B9766892312DF28005DC725 /* NullToolType.cpp */,
 				0B9766852312DE47005DC725 /* BrushToolType.cpp */,
 				0B9766872312DF28005DC725 /* EraserToolType.cpp */,
 				0B9766882312DF28005DC725 /* FillToolType.cpp */,
-				0B9766892312DF28005DC725 /* NullToolType.cpp */,
+				0BCA6178231DA8DE0026B543 /* SprayToolType.cpp */,
+				0BCA617A231DA9D00026B543 /* PickerToolType.cpp */,
 				0B9766832312D5C8005DC725 /* Tool.hpp */,
 			);
 			path = Tools;
@@ -457,6 +463,7 @@
 				0B4A1DBF23102F270009A467 /* BitmapFont.cpp in Sources */,
 				0B4A1DD123102F270009A467 /* imgui_stdlib.cpp in Sources */,
 				0B4A1DBD23102F270009A467 /* xmlwriter.cpp in Sources */,
+				0BCA617B231DA9D00026B543 /* PickerToolType.cpp in Sources */,
 				0B4A1DBA23102F270009A467 /* osdialog_mac.m in Sources */,
 				0B4A1DC723102F270009A467 /* ProgressBar.cpp in Sources */,
 				0B4A1DD923102F270009A467 /* Grid.cpp in Sources */,
@@ -476,6 +483,7 @@
 				0B4A1DC323102F270009A467 /* ConsoleScreen.cpp in Sources */,
 				0B97668C2312DF28005DC725 /* NullToolType.cpp in Sources */,
 				0B4A1DD323102F270009A467 /* imgui_draw.cpp in Sources */,
+				0BCA6179231DA8DE0026B543 /* SprayToolType.cpp in Sources */,
 				0B97668B2312DF28005DC725 /* FillToolType.cpp in Sources */,
 				0B4A1DD723102F270009A467 /* Cell.cpp in Sources */,
 				0B4A1DB623102F270009A467 /* Window.cpp in Sources */,

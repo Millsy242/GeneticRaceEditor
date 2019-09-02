@@ -35,11 +35,12 @@ sf::Color Grid::GetPixel(sf::Vector2f pos)
         return renderimage.getPixel(pos.x, pos.y);
     
     
-    return sf::Color::Black;
+    return sf::Color::Transparent;
 }
-bool Grid::PointOnCanvas(sf::Vector2f pos)
+bool Grid::PointOnCanvas(sf::Vector2f pos,bool adjustme)
 {
-    pos+=GridPosition;
+    if(adjustme)
+        pos+=GridPosition;
     if(canvas.getGlobalBounds().contains(pos))
         return true;
     else
