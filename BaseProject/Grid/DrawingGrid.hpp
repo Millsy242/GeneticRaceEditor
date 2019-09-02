@@ -33,17 +33,18 @@ public:
     void Serialise(Yaml::Node &root, sw::ProgressBar &bar); 
     
 private:
-	
+    void Controls();
 	sf::CircleShape& GetPointer();
 	void UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i MousePos = {-1,-1}); 
     
     Grid grid;
     
-    bool IsShown = false; 
+    bool IsShown = false;
+    bool imguiHovered = false; 
     
     std::thread mythread;
-    
-    
+    bool updatinggrid = false; 
+    sf::Vector2i MousePos = {0,0};
 	sf::CircleShape pointerSquare;
     sf::Cursor cursor;
     sf::Cursor OnScreenCursor;

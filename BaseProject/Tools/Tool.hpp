@@ -17,9 +17,6 @@ struct PaintOptions
     sf::Color MainBrushColour = sf::Color::Red;
     sf::Color SecondBrushColour = sf::Color::Blue;
     
-    int CellWidth = 1;
-    int CellHeight = 1; 
-    
     sf::CircleShape shape;
 };
 

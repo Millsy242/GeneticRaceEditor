@@ -9,107 +9,52 @@
 #include "Tool.hpp"
 #include <vector>
 #include "Grid.hpp"
+#include <iostream>
+#include <thread>
+
 
 void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
 {
-    auto ShapeHeight = options.shape.getGlobalBounds().height;
-    auto ShapeWidth = options.shape.getGlobalBounds().width;
-    
-    sf::Vector2f Mouse = (sf::Vector2f)MousePos - grid.GridPosition;
-    sf::Color target = grid.GetPixel(Mouse);
-    if(options.MainBrushColour == target)
-    {
-        return;
-    }
-    std::vector<std::pair<int, int>> S;
-    
-    S.push_back(std::pair<int,int>(Mouse.y,Mouse.x));
-    
-    int i = 0;
-    while(S.size() > 0)
-    {
-        
-        auto p = S.back();
-        S.pop_back();
-        int x = p.second;
-        int y = p.first;
-        //if(grid.PointOnGrid(sf::Vector2f(x,y), true))
+
+        sf::Color target = grid.GetPixel(sf::Vector2f(MousePos));
+        if(options.MainBrushColour == target)
         {
-            
-            if(grid.GetPixel(sf::Vector2f(x, y)) == target)
-            {
-                grid.SetCell(sf::Vector2f(x, y), options.MainBrushColour);
-                
-                if(y-1 >= 0 )
-                    S.push_back({y-1,x});
-                if(x-1 >= 0)
-                    S.push_back({y,x-1});
-                if(y+1<grid.Width)
-                    S.push_back({y+1,x});
-                if(x+1<grid.Height)
-                    S.push_back({y,x+1});
-            }
+            return;
         }
-        i++;
-
-            
-    }
-}
-    /*
-
-    //make sure we're inside a cell
-    auto gridcoords = grid.ConverttoGrid(sf::Vector2f(MousePos), true);
-    
-    if(grid.PointOnGrid(sf::Vector2f(gridcoords.x,gridcoords.y), true))
-    {
-        sf::Color target = grid.myGrid[gridcoords.y][gridcoords.x].getColour();
-       if( grid.myGrid[gridcoords.y][gridcoords.x].MouseInCell(sf::Vector2f(MousePos),5))
+        std::vector<std::pair<int, int>> S;
+        
+        S.push_back(std::pair<int,int>(MousePos.y,MousePos.x));
+        while(S.size() > 0)
         {
-            if(options.MainBrushColour == target)
+            auto p = S.back();
+            S.pop_back();
+            int x = p.second;
+            int y = p.first;
+            if(grid.PointOnCanvas(sf::Vector2f(x-grid.GridPosition.x,y-grid.GridPosition.y)))
             {
-                return;
-            }
-            std::vector<std::pair<int, int>> S;
-            
-            S.push_back(std::pair<int,int>(gridcoords.y,gridcoords.x));
-         
-            int i = 0;
-            while(S.size() > 0)
-            {
-         
-                auto p = S.back();
-                S.pop_back();
-                int x = p.second;
-                int y = p.first;
-                if(grid.PointOnGrid(sf::Vector2f(x,y), true))
+                if(grid.GetPixel(sf::Vector2f(x, y)) == target)
                 {
-         
-                    if(grid.myGrid[y][x].getColour() == target)
-                    {
-                        grid.SetCell(x, y, options.MainBrushColour);
-         
-                        if(y-1 >= 0 )
-                            S.push_back({y-1,x});
-                        if(x-1 >= 0)
-                            S.push_back({y,x-1});
-                        if(y+1<grid.NumRow)
-                            S.push_back({y+1,x});
-                        if(x+1<grid.NumCol)
-                            S.push_back({y,x+1});
-                    }
+                    grid.SetCell(sf::Vector2f(x, y), options.MainBrushColour);
+                    
+                    S.push_back({y-1,x});
+                    
+                    S.push_back({y,x+1});
+                    
+                    S.push_back({y,x-1});
+                    
+                    S.push_back({y+1,x});
                 }
-                i++;
             }
         }
-    }
-         */
-    
+        
 
-    void FillToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
-    {
-        
-    }
-    void FillToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
-    {
-        
-    }
+}
+
+void FillToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+{
+    
+}
+void FillToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, const PaintOptions &options)
+{
+    
+}

@@ -24,19 +24,22 @@ void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int 
 }
 void Grid::SetCell(sf::Vector2f pos, sf::Color colour)
 {
+    pos-=GridPosition;
     if(PointOnCanvas(pos))
         renderimage.setPixel(pos.x, pos.y, colour);
 }
 sf::Color Grid::GetPixel(sf::Vector2f pos)
 {
+    pos-=GridPosition;
     if(PointOnCanvas(pos))
         return renderimage.getPixel(pos.x, pos.y);
     
-    std::cerr << "oops this point isnt on the canvas" <<std::endl;
+    
     return sf::Color::Black;
 }
 bool Grid::PointOnCanvas(sf::Vector2f pos)
 {
+    pos+=GridPosition;
     if(canvas.getGlobalBounds().contains(pos))
         return true;
     else
@@ -44,6 +47,7 @@ bool Grid::PointOnCanvas(sf::Vector2f pos)
 }
 void Grid::Render(Window &window, bool isshown)
 {
+    
     canvasTexture.loadFromImage(renderimage);
     canvas.setTexture(&canvasTexture);
     

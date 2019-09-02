@@ -18,9 +18,15 @@ void BrushToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, const PaintOp
     {
         for(int x=-options.BrushSize; x<=options.BrushSize; x++)
         {
-            if(x*x+y*y <= options.BrushSize*options.BrushSize)
+            int actualX = MousePos.x + x;
+            int actualY = MousePos.y + y;
+            
+            int dx = std::abs(MousePos.x - actualX);
+            int dy = std::abs(MousePos.y - actualY);
+            
+            if(std::sqrt(dx * dx + dy * dy) <= options.BrushSize)
             {
-                grid.SetCell(sf::Vector2f(MousePos.x+x,MousePos.y+y), options.MainBrushColour);
+               grid.SetCell(sf::Vector2f(MousePos.x+x,MousePos.y+y), options.MainBrushColour);
             }
         }
     }

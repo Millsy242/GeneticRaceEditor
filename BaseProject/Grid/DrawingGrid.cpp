@@ -11,16 +11,13 @@
 
 DrawingGrid::DrawingGrid()
 {
-    
 }
-
 void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int cellW, int cellH)
 {
-    //grid.SetupGrid(sf::Vector2f(100,0),"myimage.png", 2, 2);
     grid.SetupGrid({offsetx,offsety}, width, height, cellW,cellH);
     options.shape.setRadius(options.BrushSize);
     options.shape.setFillColor(sf::Color::Transparent);
-    options.shape.setOrigin(options.shape.getLocalBounds().width-0.5, options.shape.getLocalBounds().height-0.5);
+    options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
     options.shape.setPointCount(2000);
     options.shape.setOutlineThickness(3);
     options.shape.setOutlineColor(sf::Color::Magenta);
@@ -30,11 +27,9 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
 	pointerSquare.setRotation(45);
     
     options.BrushSize = 20;
-    options.CellHeight = cellH;
-    options.CellWidth = cellW;
+    currentTool = std::make_unique<NullToolType>();
     
-     currentTool = std::make_unique<NullToolType>();
-    
+    mythread = std::thread(&DrawingGrid::Controls, this);
 }
 sf::CircleShape& DrawingGrid::GetPointer()
 {
@@ -51,8 +46,8 @@ void DrawingGrid::UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i Mous
 	pointerSquare.setRadius(options.BrushSize);
 	if(ReCenter)
 	{
-		options.shape.setOrigin(options.shape.getLocalBounds().width-0.5, options.shape.getLocalBounds().height-0.5);
-        pointerSquare.setOrigin(options.shape.getLocalBounds().width-0.5, options.shape.getLocalBounds().height-0.5);
+		options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
+        pointerSquare.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
 	}
 	if(MousePos != sf::Vector2i(-1,-1))
 	{
@@ -62,6 +57,8 @@ void DrawingGrid::UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i Mous
 }
 void DrawingGrid::Input(sf::Vector2i mousepos)
 {
+    imguiHovered = ImGui::IsAnyWindowHovered();
+    MousePos = mousepos;
 	ImGuiWindowFlags window_flags = 0;
 	
 	window_flags |= ImGuiWindowFlags_MenuBar;
@@ -108,19 +105,26 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 		brushShape = BrushShape::eSquare;
 	
 	ImGui::End();
-
-	UpdatePointers(options.BrushSize, true, mousepos);
-	
-    if(!ImGui::IsAnyWindowHovered()) //Allow ImGui Windows to be above grid whilst also not drawing on grid
+    UpdatePointers(options.BrushSize, true, MousePos);
+ 
+}
+void DrawingGrid::Controls()
+{
+    while(true)
     {
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        if(!updatinggrid)
         {
-            auto mp = mousepos - (sf::Vector2i)getGrid()->GridPosition;
-           
-            currentTool->OnMouseDown(mp, grid, options);
+            if(!imguiHovered) //Allow ImGui Windows to be above grid whilst also not drawing on grid
+            {
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    updatinggrid = true;
+                    currentTool->OnMouseDown(MousePos, grid, options);
+                    updatinggrid = false;
+                }
+            }
         }
     }
-    
 }
 void DrawingGrid::Render(Window *window)
 {	
