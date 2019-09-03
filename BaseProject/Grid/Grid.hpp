@@ -42,14 +42,14 @@ public:
 	 sf::Color GridBackground;
     
     sf::Vector2f GridPosition;
-
+    sf::RectangleShape canvas;
     
 private:
 
     bool MouseOnGrid = false;
     
     sf::Image renderimage;
-    sf::RectangleShape canvas;
+    
     sf::Texture canvasTexture;
     
 };

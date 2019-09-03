@@ -81,6 +81,8 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 	{
 		options.MainBrushColour = sf::Color(col[0]* 255.f,col[1]* 255.f,col[2]* 255.f);
 	}
+    ImGui::SliderInt("Scale", &scale, 1, 4);
+    grid.canvas.setScale(scale,scale);
 	if(ImGui::Button("Brush"))
     {
 		 SelectedTool = Tool::eBrush;
@@ -143,7 +145,7 @@ void DrawingGrid::Render(Window *window)
     grid.Render(*window,IsShown);
     if(IsShown)
     {    
-        if(grid.PointOnCanvas(sf::Vector2f(MousePos)))
+        if(grid.PointOnCanvas(sf::Vector2f(MousePos),false))
         {
             window->draw(GetPointer());
             switch (SelectedTool)

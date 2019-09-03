@@ -57,6 +57,7 @@ private:
 	void UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i MousePos = {-1,-1}); 
     
     Grid grid;
+    int scale; 
     
     bool IsShown = false;
     bool imguiHovered = false; 
