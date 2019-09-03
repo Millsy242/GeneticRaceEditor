@@ -40,6 +40,8 @@ void Track::Start(int ScreenWidth, int ScreenHeight,bool loading ,int NumNodes,i
         node RNode;
         RNode.setup(Rspline, {0,0});
         
+        
+        
         nodes.push_back(newnode);
         Lnodes.push_back(LNode);
         Rnodes.push_back(RNode);
@@ -115,6 +117,10 @@ void Track::Input(sf::Vector2i MousePos)
 	{
 		changed = true;
 	}
+    if (ImGui::Button("Set Start"))
+    {
+        StartLine = selected;
+    }
     if (ImGui::Button("Add Node"))
     {
 			AddNode(selected);
@@ -147,18 +153,21 @@ void Track::Input(sf::Vector2i MousePos)
 				if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
 					selected = i;
-					
 				}
 				nodes[i].dot.setFillColor(sf::Color::Yellow);
 			}
+            else if (i == StartLine)
+            {
+                nodes[i].dot.setFillColor(sf::Color::White);
+            }
 			else if( i != selected)
 			{
 				nodes[i].dot.setFillColor(sf::Color::Blue);
 			}
-			else
-			{
-				nodes[i].dot.setFillColor(sf::Color::Red);
-			}
+            else
+            {
+                nodes[i].dot.setFillColor(sf::Color::Red);
+            }
 		}
 	}
     if(changed)
@@ -184,8 +193,6 @@ void Track::UpdateTrack()
 		
 		float r = atan2(-g1.y, g1.x);
 		nodes[i].Line.setPoints({trackwidth * sin(r) + p1.x, trackwidth * cos(r) + p1.y}, {-trackwidth * sin(r) + p1.x, -trackwidth * cos(r) + p1.y});
-		
-		
     }
 }
 void Track::Onleave()
@@ -218,12 +225,13 @@ void Track::Render( Window *window)
             text.setPosition(nodes[i].dot.getPosition().x + 15,nodes[i].dot.getPosition().y + 15);
             text.setString(std::to_string(i));
             nodes[i].dot.setPosition(spline.points[i].x,spline.points[i].y);
-			
-			
-			window->draw(nodes[i].Line);
-			
+            
+            window->draw(nodes[i].Line);
             window->draw(nodes[i].dot);
             window->draw(text);
+			
+
+			
         }
     }
 }

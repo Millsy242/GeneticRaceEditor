@@ -41,7 +41,7 @@ public:
     void LoadSaveThread(); 
     
 private:
-	const double Version = 0.45; 
+	const double Version = 0.5; 
 	std::string TrackName = "NewTrack";
     
     sw::ProgressBar bar;

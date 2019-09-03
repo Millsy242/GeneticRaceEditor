@@ -40,6 +40,7 @@ public:
     ~DrawingGrid(){};
     
     void Start(int width, int height, float offsetx, float offsety, int cellW, int cellH);
+    void Start(float offsetx, float offsety, std::string filename);
     void Input(sf::Vector2i mousepos);
     void Render(Window *window);
     
@@ -48,7 +49,7 @@ public:
 	void saveTracktoGrid(Track *track);
     Grid* getGrid();
 	
-    void Serialise(Yaml::Node &root, sw::ProgressBar &bar); 
+    void Serialise(Yaml::Node &root, sw::ProgressBar &bar, std::string filename); 
     
 private:
     void Controls();

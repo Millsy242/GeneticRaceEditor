@@ -209,7 +209,6 @@
 				0B4A1D5F23102F270009A467 /* External Additions */,
 				0B4A1DAC23102F270009A467 /* Game */,
 				0B4A1DAF23102F270009A467 /* Grid */,
-				0B4A1DAA23102F270009A467 /* myspline */,
 				0B4A1D5823102F260009A467 /* Render */,
 				0B4A1D5C23102F270009A467 /* Track */,
 				0B3004CD22B53812007515D0 /* main.cpp */,
@@ -243,6 +242,7 @@
 		0B4A1D5C23102F270009A467 /* Track */ = {
 			isa = PBXGroup;
 			children = (
+				0B4A1DAA23102F270009A467 /* myspline */,
 				0B4A1D5D23102F270009A467 /* Track.hpp */,
 				0B4A1D5E23102F270009A467 /* Track.cpp */,
 			);

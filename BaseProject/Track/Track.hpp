@@ -13,12 +13,14 @@
 #include "Window.hpp"
 #include "SelbaWard.hpp"
 #include "Yaml.hpp"
+#include "SfMath.hpp"
 
 struct node
 {
     sf::RectangleShape dot;
 	sw::Line Line;
-	
+    
+    
     sf::Color cols[10] = {sf::Color::Blue,sf::Color::Green,sf::Color(230,55,89) ,sf::Color::Yellow,sf::Color::Magenta,sf::Color::Red,sf::Color(128,128,128),sf::Color::Cyan,sf::Color(255,192,203),sf::Color(255,165,0)};
     node()
     {
@@ -26,7 +28,7 @@ struct node
     }
     
     void setup(mySpline &Spline, sf::Vector2f position, bool Add = true)
-    {		
+    {
         dot.setSize(sf::Vector2f(15,15));
         dot.setFillColor(cols[0]);
         dot.setOutlineThickness(2);
@@ -36,6 +38,7 @@ struct node
 		Line.setThickness(4);
 		if(Add)
 			Spline.AddPoint(position);
+
     }
 };
 

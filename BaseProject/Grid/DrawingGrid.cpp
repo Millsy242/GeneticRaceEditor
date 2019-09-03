@@ -14,7 +14,7 @@ DrawingGrid::DrawingGrid()
 }
 void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int cellW, int cellH)
 {
-    grid.SetupGrid({offsetx,offsety}, width, height, cellW,cellH);
+    grid.SetupGrid({offsetx,offsety}, width, height);
     options.shape.setRadius(options.BrushSize);
     options.shape.setFillColor(sf::Color::Transparent);
     options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
@@ -30,6 +30,10 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
     currentTool = std::make_unique<NullToolType>();
     
     mythread = std::thread(&DrawingGrid::Controls, this);
+}
+void DrawingGrid::Start(float offsetx, float offsety, std::string filename)
+{
+    grid.SetupGrid({offsetx,offsety}, filename);
 }
 sf::CircleShape& DrawingGrid::GetPointer()
 {
@@ -139,7 +143,7 @@ void DrawingGrid::Render(Window *window)
     grid.Render(*window,IsShown);
     if(IsShown)
     {    
-        //if(grid.isMouseOnGrid())
+        if(grid.PointOnCanvas(sf::Vector2f(MousePos)))
         {
             window->draw(GetPointer());
             switch (SelectedTool)
@@ -165,12 +169,12 @@ void DrawingGrid::Render(Window *window)
             
             window->SFwindow.setMouseCursor(cursor);
         }
-        /*
+        
         else
         {
             cursor.loadFromSystem(sf::Cursor::Arrow);
             window->SFwindow.setMouseCursor(cursor);
-        }            */
+        }            
     }
     else
     {
@@ -226,40 +230,24 @@ Grid* DrawingGrid::getGrid()
 {
     return &grid;
 }
-void DrawingGrid::Serialise(Yaml::Node &root, sw::ProgressBar &bar)
-{/*
-
-	std::string Data = "";
-
-	Data += "Cell Width: " + std::to_string(grid.CellW) + "\n"
-	"Cell Height: " + std::to_string(grid.CellH) + "\n"
+void DrawingGrid::Serialise(Yaml::Node &root, sw::ProgressBar &bar, std::string filename)
+{
+    grid.SaveImage(filename);
+	std::string Data =
 	"GridSize: " + std::to_string(grid.TotalSize) + "\n"
 	"TrackEdgeColour: " + std::to_string((uint32_t)TrackEdgeColour.toInteger()) + "\n"
 	"BackgroundColour: " + std::to_string((uint32_t)grid.GridBackground.toInteger()) + "\n"
+    "ImagePath: " + filename + "\n"
 	"Optimise: " + std::to_string((int)Optimise) + "\n\n\n";
     bar.setPercentage(bar.getPercentage()+1);
+    try
+    {
+        Yaml::Parse(root, Data);
+    }
+    catch (const Yaml::Exception e)
+    {
+        std::cout << "Exception " << e.Type() << ": " << e.what() << std::endl;
+        return;
+    }
 
-	if(!Optimise)
-	{
-		//Only run this when we dont want to optimise
-		//Optimising involves only saving the Background colour,
-		//Then using the Track Nodes Data to create the Track Ingame.
-		//This is fine as long as there are no manual edits to the grid
-		//such as: fine tuning tracks, adding trackside art etc.
-		grid.SaveToFile(Data,bar);
-		
-		try
-		{
-			Yaml::Parse(root, Data);
-		}
-		catch (const Yaml::Exception e)
-		{
-			std::cout << "Exception " << e.Type() << ": " << e.what() << std::endl;
-			return;
-		}
-		
-	}
-	
-  */
-	
 }

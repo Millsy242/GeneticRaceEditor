@@ -196,7 +196,7 @@ void Game::Save()
     Yaml::Serialize(root, TrackString);
     savingtext.setString("Saving... Getting Grid Data");
     bar.setPercentage(40.f);
-    Grid.Serialise(root,bar);
+    Grid.Serialise(root,bar,TrackName+".png");
     bar.setPercentage(50.f);
     savingtext.setString("Saving... Writing Grid Data");
     Yaml::Serialize(root, GridString);
@@ -236,76 +236,31 @@ void Game::Load(std::string filename)
         return;
     }
     savingtext.setString("Loading Basic Data");
-    int height,width,cellwidth,cellheight,totalsize;
-    u_int32_t BackgroundColour;
-    
+    int height,width;
+    std::string filepath;
+    u_int32_t BackgroundColour;    
     TrackName = root["Name"].As<std::string>();
     bar.setPercentage(bar.getPercentage()+1);
     height = root["Height"].As<int>();
     bar.setPercentage(bar.getPercentage()+1);
     width = root["Width"].As<int>();
     bar.setPercentage(bar.getPercentage()+1);
-    cellheight =  root["Cell Height"].As<int>();
-    bar.setPercentage(bar.getPercentage()+1);
-    cellwidth =  root["Cell Width"].As<int>();
+    filepath = root["ImagePath"].As<std::string>();
     bar.setPercentage(bar.getPercentage()+1);
     BackgroundColour = root["Background Colour"].As<u_int32_t>();
     bar.setPercentage(bar.getPercentage()+1);
-    totalsize = root["GridSize"].As<int>();
-    bar.setPercentage(bar.getPercentage()+1);
     savingtext.setString("Setting Up Grid");
-    Grid.Start(width, height, 400, 0, cellwidth, cellheight);
-    //Grid.getGrid()->SetBackgroundColour(sf::Color(BackgroundColour));
-    
-    
-    
-    if(!root["Optimise"].As<bool>())
-    {
-        
-        auto gridSetup = [this] (std::pair<int,int> limit )
-        {
-            int x,y;
-            uint32_t colour;
-            std::string name;
-            for(int i = limit.first; i<limit.second; i++)
-            {
-                name = "Cell" + std::to_string(i);
-                savingtext.setString("Setting " + name);
-                bar.setPercentage(bar.getPercentage()+0.05f);
-                x = root[name + "X"].As<int>();
-                y = root[name + "Y"].As<int>();
-                colour = root[name + "C"].As<u_int32_t>();
-              //  Grid.getGrid()->SetCell(x, y, sf::Color(colour));
-            }
-        };
-        
-        //this makes no sense
-        //when setting it to totalsize * 0 it doesnt work at all
-        
-        
-        std::thread one(gridSetup,std::pair<int,int>(totalsize * 0.5,totalsize * 0.75));
-        std::thread two(gridSetup,std::pair<int,int>(totalsize * 0.75,totalsize));
-        
-        one.join();
-        two.join();
-        
-        
-        
-    }
-    else
-    {
-        bar.setPercentage(70.f);
-        savingtext.setString("Using Optimisation");
-    }
+    Grid.Start(400,0, filepath);
+
     savingtext.setString("Loading Track");
     int numnodes{root["NumNodes"].As<int>()},Sector1{root["Sector1"].As<int>()},Sector2{root["Sector2"].As<int>()},Sector3{root["Sector3"].As<int>()},Start{root["StartLine"].As<int>()},Finish{root["FinishLine"].As<int>()};
     float TrackWidth{root["TrackWidth"].As<float>()};
-    std::string name;
+    
     track.Start(window.ScreenWidth(), window.ScreenHeight(),true,numnodes,Sector1,Sector2,Sector3,Start,Finish,TrackWidth);
     track.Clear();
     
     float Tx,Ty;
-    
+    std::string name;
     for(int i{0};i<numnodes;i++)
     {
         name = "Node" + std::to_string(i);
@@ -314,11 +269,8 @@ void Game::Load(std::string filename)
         Ty = root[name + "_Y"].As<int>();
         track.spline.AddPoint(sf::Vector2f(Tx,Ty));
     }
-    
     track.UpdateTrack();
     savingtext.setString("Finished");
     GameState = eNull;
     savingtext.setString("");
 }
-
-

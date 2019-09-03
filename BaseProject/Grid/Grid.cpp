@@ -9,7 +9,7 @@
 #include "Grid.hpp"
 #include <iostream>
 
-void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int cellH)
+void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height)
 {
     Width =  width;
     Height = height;
@@ -21,6 +21,23 @@ void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height, int cellW, int 
     canvas.setTexture(&canvasTexture);
     canvas.setPosition(GridPosition);
     canvas.setSize(sf::Vector2f(width,height));
+}
+void Grid::SetupGrid(sf::Vector2f gridPos, std::string ImagePath)
+{
+
+    GridPosition = gridPos;
+    
+    renderimage.loadFromFile(ImagePath);
+    
+    Width =  renderimage.getSize().x;
+    Height = renderimage.getSize().y;
+    
+    canvasTexture.create(Width, Height);
+    canvasTexture.loadFromImage(renderimage);
+    
+    canvas.setTexture(&canvasTexture);
+    canvas.setPosition(GridPosition);
+    canvas.setSize(sf::Vector2f(Width, Height));
 }
 void Grid::SetCell(sf::Vector2f pos, sf::Color colour)
 {
@@ -53,6 +70,10 @@ void Grid::Render(Window &window, bool isshown)
     canvas.setTexture(&canvasTexture);
     
     window.draw(canvas);
+}
+void Grid::SaveImage(std::string filename)
+{
+    renderimage.saveToFile(filename);
 }
 /*
 
