@@ -72,19 +72,14 @@ void Game::Input()
 {
     if(GameState != eSave && GameState != eLoad)
     {
-        static std::array<char, 50> Trackname;
-        
         ImGuiWindowFlags window_flags = 0;
         window_flags |= ImGuiWindowFlags_NoTitleBar;
         window_flags |= ImGuiWindowFlags_MenuBar;
         window_flags |= ImGuiWindowFlags_NoMove;
         //window_flags |= ImGuiWindowFlags_NoResize;
         ImGui::Begin("menu",NULL,window_flags);
-        if(ImGui::InputTextWithHint("TrackName", "Input TrackName", Trackname.data(), Trackname.size()))
-        {
-            TrackName = Trackname.data();
-            
-        }
+
+        ImGui::InputTextWithHint("TrackName", "Input TrackName", &TrackName);
         if(ImGui::Button("Close"))
         {
             window.Close();

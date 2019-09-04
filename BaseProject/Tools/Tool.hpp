@@ -17,7 +17,6 @@ struct PaintOptions
     sf::Color MainBrushColour = sf::Color::Red;    
     sf::CircleShape shape;
 };
-
 class ToolType
 {
 public:

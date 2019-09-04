@@ -14,7 +14,7 @@
 
 Window::Window(const std::string& windowName): SFwindow{sf::VideoMode(1920, 1080), windowName, sf::Style::Default}
 {  
-    SFwindow.setFramerateLimit(500);
+    SFwindow.setFramerateLimit(60);
 	rendertexture.create(SFwindow.getSize().x,SFwindow.getSize().y);
 	ImGui::SFML::Init(SFwindow);
     CalculateDT();
