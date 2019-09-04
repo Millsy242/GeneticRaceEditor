@@ -9,8 +9,7 @@
 #include "Tool.hpp"
 #include <vector>
 #include "Grid.hpp"
-#include <iostream>
-#include <thread>
+
 
 
 void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)

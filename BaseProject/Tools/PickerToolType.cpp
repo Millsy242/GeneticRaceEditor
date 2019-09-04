@@ -6,9 +6,8 @@
 //  Copyright © 2019 Daniel Harvey. All rights reserved.
 //
 #include "Tool.hpp"
-#include <iostream>
 #include "Grid.hpp"
-#include <vector>
+
 void PickerToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
 {
     if(grid.GetPixel(sf::Vector2f(MousePos)) != sf::Color::Transparent)
