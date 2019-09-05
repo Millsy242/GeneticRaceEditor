@@ -77,6 +77,9 @@ private:
     PaintOptions options; 
     std::unique_ptr<ToolType> currentTool;
     
+    
+    sf::Texture nullIcon,pickerIcon,eraserIcon,sprayIcon,brushIcon,fillIcon,circleIcon,squareIcon; 
+    
 };
 
 #endif /* DrawingGrid_hpp */
