@@ -53,6 +53,12 @@ public:
     
 private:
     void Controls();
+    void ToolControls();
+    void Layers();
+    void Textures();
+    
+    std::vector<sf::Texture> TrackTextures;
+    
 	sf::CircleShape& GetPointer();
 	void UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i MousePos = {-1,-1}); 
     

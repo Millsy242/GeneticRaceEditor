@@ -38,6 +38,9 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
     circleIcon.loadFromFile("Icons/circle.png");
     squareIcon.loadFromFile("Icons/square.png");
     
+    //input while loop reading png files from file named Track_X
+    //Make sure to do while(file_exists("Track_" + X + ".png")
+    
     
     mythread = std::thread(&DrawingGrid::Controls, this);
 }
@@ -73,77 +76,106 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
 {
     imguiHovered = ImGui::IsAnyWindowHovered();
     MousePos = mousepos;
+    
+    ToolControls();
+    Layers();
+    Textures();
+   
+    UpdatePointers(options.BrushSize, true, MousePos);
+}
+void DrawingGrid::ToolControls()
+{
     ImGuiWindowFlags window_flags = 0;
-    
-    window_flags |= ImGuiWindowFlags_MenuBar;
-    //window_flags |= ImGuiWindowFlags_NoMove;
-    window_flags |= ImGuiWindowFlags_NoResize;
-    
-    float col[3]{options.MainBrushColour.r/255.f, options.MainBrushColour.g/255.f,options.MainBrushColour.b/255.f};
-    ImGui::Begin("Drawing Tools",NULL, window_flags);
-    
-    if(SelectedTool == Tool::eBrush || SelectedTool == Tool::eSpray || SelectedTool == Tool::eErase )
-    {
-        if(ImGui::SliderInt("BrushSize", &options.BrushSize, 1, 500))
-            UpdatePointers(options.BrushSize, true);
-    }
-    if(ImGui::ColorPicker3("Colour Pick", col))
-    {
-        options.MainBrushColour = sf::Color(col[0]* 255.f,col[1]* 255.f,col[2]* 255.f);
-        
-    }
-    ImGui::SliderInt("Scale", &scale, 1, 4);
-    grid.canvas.setScale(scale,scale);
-    ImGui::Columns(3,nullptr,false);
+     
+    // window_flags |= ImGuiWindowFlags_MenuBar;
+     //window_flags |= ImGuiWindowFlags_NoMove;
+    // window_flags |= ImGuiWindowFlags_NoResize;
+     
+     float col[3]{options.MainBrushColour.r/255.f, options.MainBrushColour.g/255.f,options.MainBrushColour.b/255.f};
+     ImGui::Begin("Drawing Tools",NULL, window_flags);
+     
+     if(SelectedTool == Tool::eBrush || SelectedTool == Tool::eSpray || SelectedTool == Tool::eErase )
+     {
+         if(ImGui::SliderInt("BrushSize", &options.BrushSize, 1, 500))
+             UpdatePointers(options.BrushSize, true);
+     }
+     if(ImGui::ColorPicker3("Colour Pick", col))
+     {
+         options.MainBrushColour = sf::Color(col[0]* 255.f,col[1]* 255.f,col[2]* 255.f);
+     }
+     ImGui::SliderInt("Scale", &scale, 1, 4);
+     grid.canvas.setScale(scale,scale);
+     ImGui::Columns(3,nullptr,false);
+     ImGui::SetColumnOffset(1, 100);
+     {
+         
+         if(ImGui::ImageButton(brushIcon, sf::Vector2f(64,64)))
+         {
+             SelectedTool = Tool::eBrush;
+             currentTool = std::make_unique<BrushToolType>();
+         }
+         ImGui::NextColumn();
+         if(ImGui::ImageButton(fillIcon, sf::Vector2f(64,64)))
+         {
+             SelectedTool = Tool::eFill;
+             currentTool = std::make_unique<FillToolType>();
+         }
+         ImGui::NextColumn();
+         if(ImGui::ImageButton(pickerIcon, sf::Vector2f(64,64)))
+         {
+             SelectedTool = Tool::eColourPick;
+             currentTool = std::make_unique<PickerToolType>();
+         }
+         ImGui::NextColumn();
+         if(ImGui::ImageButton(sprayIcon, sf::Vector2f(64,64)))
+         {
+             SelectedTool = Tool::eSpray;
+             currentTool = std::make_unique<SprayToolType>();
+         }
+         ImGui::NextColumn();
+         if(ImGui::ImageButton(eraserIcon, sf::Vector2f(64,64)))
+         {
+             SelectedTool = Tool::eErase;
+             currentTool = std::make_unique<EraserToolType>();
+         }
+         ImGui::NextColumn();
+         if(ImGui::ImageButton(nullIcon, sf::Vector2f(64,64)))
+         {
+             SelectedTool = Tool::eNull;
+             currentTool = std::make_unique<NullToolType>();
+         }
+         ImGui::NextColumn();
+         if(ImGui::ImageButton(circleIcon, sf::Vector2f(64,64)))
+             brushShape = BrushShape::eCircle;
+         ImGui::NextColumn();
+         if(ImGui::ImageButton(squareIcon, sf::Vector2f(64,64)))
+             brushShape = BrushShape::eSquare;
+     }
+     
+     ImGui::End();
+     
+}
+void DrawingGrid::Layers()
+{
+    ImGui::Begin("Layers");
+       
+       ImGui::End();
+}
+void DrawingGrid::Textures()
+{
+    ImGui::Begin("Texture Picker");
+     ImGui::Columns(3,nullptr,false);
     ImGui::SetColumnOffset(1, 100);
     {
-        
-        if(ImGui::ImageButton(brushIcon, sf::Vector2f(64,64)))
+        for(int i{0}; i<TrackTextures.size();i++)
         {
-            SelectedTool = Tool::eBrush;
-            currentTool = std::make_unique<BrushToolType>();
+            if(ImGui::ImageButton(TrackTextures[i], sf::Vector2f(64,64)))
+            {
+                
+            }
         }
-        ImGui::NextColumn();
-        if(ImGui::ImageButton(fillIcon, sf::Vector2f(64,64)))
-        {
-            SelectedTool = Tool::eFill;
-            currentTool = std::make_unique<FillToolType>();
-        }
-        ImGui::NextColumn();
-        if(ImGui::ImageButton(pickerIcon, sf::Vector2f(64,64)))
-        {
-            SelectedTool = Tool::eColourPick;
-            currentTool = std::make_unique<PickerToolType>();
-        }
-        ImGui::NextColumn();
-        if(ImGui::ImageButton(sprayIcon, sf::Vector2f(64,64)))
-        {
-            SelectedTool = Tool::eSpray;
-            currentTool = std::make_unique<SprayToolType>();
-        }
-        ImGui::NextColumn();
-        if(ImGui::ImageButton(eraserIcon, sf::Vector2f(64,64)))
-        {
-            SelectedTool = Tool::eErase;
-            currentTool = std::make_unique<EraserToolType>();
-        }
-        ImGui::NextColumn();
-        if(ImGui::ImageButton(nullIcon, sf::Vector2f(64,64)))
-        {
-            SelectedTool = Tool::eNull;
-            currentTool = std::make_unique<NullToolType>();
-        }
-        ImGui::NextColumn();
-        if(ImGui::ImageButton(circleIcon, sf::Vector2f(64,64)))
-            brushShape = BrushShape::eCircle;
-        ImGui::NextColumn();
-        if(ImGui::ImageButton(squareIcon, sf::Vector2f(64,64)))
-            brushShape = BrushShape::eSquare;
     }
-    
     ImGui::End();
-    UpdatePointers(options.BrushSize, true, MousePos);
-    
 }
 void DrawingGrid::Controls()
 {
