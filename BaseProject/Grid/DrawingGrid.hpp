@@ -11,7 +11,7 @@
 #include "Tool.hpp"
 #include <SFML/Graphics.hpp>
 #include "Window.hpp"
-#include "Grid.hpp"
+#include "Canvas.hpp"
 #include "SelbaWard.hpp"
 #include "Yaml.hpp"
 
@@ -47,7 +47,7 @@ public:
     void Onleave();
     void OnReEntry(); 
 	void saveTracktoGrid(Track *track);
-    Grid* getGrid();
+    Canvas* getCanvas();
 	
     void Serialise(Yaml::Node &root, sw::ProgressBar &bar, std::string filename); 
     
@@ -57,13 +57,16 @@ private:
     void Layers();
     void Textures();
     
+    std::vector<sf::Sprite> TrackSprites;
     std::vector<sf::Texture> TrackTextures;
+    std::vector<unsigned int> LayersVector; 
     
 	sf::CircleShape& GetPointer();
 	void UpdatePointers(int brushSize, bool ReCenter, sf::Vector2i MousePos = {-1,-1}); 
     
-    Grid grid;
-    int scale = 1; 
+    Canvas canvas;
+    int scale = 1;
+    int selectedLayer = 0; 
     
     bool IsShown = false;
     bool imguiHovered = false; 

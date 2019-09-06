@@ -6,9 +6,9 @@
 //  Copyright © 2019 Daniel Harvey. All rights reserved.
 //
 
-#ifndef Grid_hpp
-#define Grid_hpp
-#include "Cell.hpp"
+#ifndef Canvas_hpp
+#define Canvas_hpp
+
 #include <vector>
 #include "Window.hpp"
 #include <SFML/Graphics.hpp>
@@ -19,19 +19,19 @@
 
 
 
-class Grid
+class Canvas
 {
 public:
-    Grid(){};
-    ~Grid() = default;
+    Canvas(){};
+    ~Canvas() = default;
     
-    void SetupGrid(sf::Vector2f gridPos, int width, int height);
-    void SetupGrid(sf::Vector2f gridPos, std::string ImagePath);
+    void SetupCanvas(sf::Vector2f gridPos, int width, int height);
+    void SetupCanvas(sf::Vector2f gridPos, std::string ImagePath);
 
     bool PointOnCanvas(sf::Vector2f Pos, bool adjustme = true);
     void Render(Window &window, bool isshown = true);
     sf::Color GetPixel(sf::Vector2f pos);
-    void SetCell(sf::Vector2f pos, sf::Color colour);
+    void SetPixel(sf::Vector2f pos, sf::Color colour);
     void SaveImage(std::string filename);
    
     
@@ -42,9 +42,9 @@ public:
 	 sf::Color GridBackground;
     
     sf::Vector2f GridPosition;
-    sf::RectangleShape canvas;
+    sf::RectangleShape canvasShape;
     
-private:
+protected:
 
     bool MouseOnGrid = false;
     
@@ -54,4 +54,4 @@ private:
     
 };
 
-#endif /* Grid_hpp */
+#endif /* Canvas_hpp */

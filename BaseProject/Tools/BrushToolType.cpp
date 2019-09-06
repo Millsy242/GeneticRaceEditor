@@ -9,10 +9,10 @@
 
 #include "Tool.hpp"
 #include <iostream>
-#include "Grid.hpp"
+#include "Canvas.hpp"
 #include <vector>
 
-void BrushToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void BrushToolType::OnMouseDown(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     for(int y=-options.BrushSize; y<=options.BrushSize; y++)
     {
@@ -26,16 +26,16 @@ void BrushToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions 
             
             if(std::sqrt(dx * dx + dy * dy) <= options.BrushSize)
             {
-               grid.SetCell(sf::Vector2f(MousePos.x+x,MousePos.y+y), options.MainBrushColour);
+               canvas.SetPixel(sf::Vector2f(MousePos.x+x,MousePos.y+y), options.MainBrushColour);
             }
         }
     }
 }
-void BrushToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void BrushToolType::OnMouseUp(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     
 }
-void BrushToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void BrushToolType::OnMouseMove(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     
 }

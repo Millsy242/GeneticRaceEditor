@@ -14,7 +14,7 @@ DrawingGrid::DrawingGrid()
 }
 void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int cellW, int cellH)
 {
-    grid.SetupGrid({offsetx,offsety}, width, height);
+    canvas.SetupCanvas({offsetx,offsety}, width, height);
     options.shape.setRadius(options.BrushSize);
     options.shape.setFillColor(sf::Color::Transparent);
     options.shape.setOrigin(options.shape.getLocalBounds().width/2, options.shape.getLocalBounds().height/2);
@@ -38,15 +38,29 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
     circleIcon.loadFromFile("Icons/circle.png");
     squareIcon.loadFromFile("Icons/square.png");
     
+    auto  is_file_exist = [] (const std::string fileName)
+    {
+        std::ifstream infile(fileName);
+        return infile.good();
+    };
+    int filenum = 1;
     //input while loop reading png files from file named Track_X
     //Make sure to do while(file_exists("Track_" + X + ".png")
+    while(is_file_exist("Textures/Track_"+std::to_string(filenum)+".png"))
+    {
+        sf::Texture texture;
+        texture.loadFromFile("Textures/Track_"+std::to_string(filenum)+".png");
+        TrackTextures.push_back(texture);
+        
+        filenum++;
+    }
     
     
     mythread = std::thread(&DrawingGrid::Controls, this);
 }
 void DrawingGrid::Start(float offsetx, float offsety, std::string filename)
 {
-    grid.SetupGrid({offsetx,offsety}, filename);
+    canvas.SetupCanvas({offsetx,offsety}, filename);
 }
 sf::CircleShape& DrawingGrid::GetPointer()
 {
@@ -80,102 +94,149 @@ void DrawingGrid::Input(sf::Vector2i mousepos)
     ToolControls();
     Layers();
     Textures();
-   
+    
     UpdatePointers(options.BrushSize, true, MousePos);
 }
 void DrawingGrid::ToolControls()
 {
     ImGuiWindowFlags window_flags = 0;
-     
+    
     // window_flags |= ImGuiWindowFlags_MenuBar;
-     //window_flags |= ImGuiWindowFlags_NoMove;
+    //window_flags |= ImGuiWindowFlags_NoMove;
     // window_flags |= ImGuiWindowFlags_NoResize;
-     
-     float col[3]{options.MainBrushColour.r/255.f, options.MainBrushColour.g/255.f,options.MainBrushColour.b/255.f};
-     ImGui::Begin("Drawing Tools",NULL, window_flags);
-     
-     if(SelectedTool == Tool::eBrush || SelectedTool == Tool::eSpray || SelectedTool == Tool::eErase )
-     {
-         if(ImGui::SliderInt("BrushSize", &options.BrushSize, 1, 500))
-             UpdatePointers(options.BrushSize, true);
-     }
-     if(ImGui::ColorPicker3("Colour Pick", col))
-     {
-         options.MainBrushColour = sf::Color(col[0]* 255.f,col[1]* 255.f,col[2]* 255.f);
-     }
-     ImGui::SliderInt("Scale", &scale, 1, 4);
-     grid.canvas.setScale(scale,scale);
-     ImGui::Columns(3,nullptr,false);
-     ImGui::SetColumnOffset(1, 100);
-     {
-         
-         if(ImGui::ImageButton(brushIcon, sf::Vector2f(64,64)))
-         {
-             SelectedTool = Tool::eBrush;
-             currentTool = std::make_unique<BrushToolType>();
-         }
-         ImGui::NextColumn();
-         if(ImGui::ImageButton(fillIcon, sf::Vector2f(64,64)))
-         {
-             SelectedTool = Tool::eFill;
-             currentTool = std::make_unique<FillToolType>();
-         }
-         ImGui::NextColumn();
-         if(ImGui::ImageButton(pickerIcon, sf::Vector2f(64,64)))
-         {
-             SelectedTool = Tool::eColourPick;
-             currentTool = std::make_unique<PickerToolType>();
-         }
-         ImGui::NextColumn();
-         if(ImGui::ImageButton(sprayIcon, sf::Vector2f(64,64)))
-         {
-             SelectedTool = Tool::eSpray;
-             currentTool = std::make_unique<SprayToolType>();
-         }
-         ImGui::NextColumn();
-         if(ImGui::ImageButton(eraserIcon, sf::Vector2f(64,64)))
-         {
-             SelectedTool = Tool::eErase;
-             currentTool = std::make_unique<EraserToolType>();
-         }
-         ImGui::NextColumn();
-         if(ImGui::ImageButton(nullIcon, sf::Vector2f(64,64)))
-         {
-             SelectedTool = Tool::eNull;
-             currentTool = std::make_unique<NullToolType>();
-         }
-         ImGui::NextColumn();
-         if(ImGui::ImageButton(circleIcon, sf::Vector2f(64,64)))
-             brushShape = BrushShape::eCircle;
-         ImGui::NextColumn();
-         if(ImGui::ImageButton(squareIcon, sf::Vector2f(64,64)))
-             brushShape = BrushShape::eSquare;
-     }
-     
-     ImGui::End();
-     
+    
+    float col[3]{options.MainBrushColour.r/255.f, options.MainBrushColour.g/255.f,options.MainBrushColour.b/255.f};
+    ImGui::Begin("Drawing Tools",NULL, window_flags);
+    
+    if(SelectedTool == Tool::eBrush || SelectedTool == Tool::eSpray || SelectedTool == Tool::eErase )
+    {
+        if(ImGui::SliderInt("BrushSize", &options.BrushSize, 1, 500))
+            UpdatePointers(options.BrushSize, true);
+    }
+    if(ImGui::ColorPicker3("Colour Pick", col))
+    {
+        options.MainBrushColour = sf::Color(col[0]* 255.f,col[1]* 255.f,col[2]* 255.f);
+    }
+    ImGui::SliderInt("Scale", &scale, 1, 4);
+    canvas.canvasShape.setScale(scale,scale);
+    ImGui::Columns(3,nullptr,false);
+    ImGui::SetColumnOffset(1, 100);
+    {
+        
+        if(ImGui::ImageButton(brushIcon, sf::Vector2f(64,64)))
+        {
+            SelectedTool = Tool::eBrush;
+            currentTool = std::make_unique<BrushToolType>();
+        }
+        ImGui::NextColumn();
+        if(ImGui::ImageButton(fillIcon, sf::Vector2f(64,64)))
+        {
+            SelectedTool = Tool::eFill;
+            currentTool = std::make_unique<FillToolType>();
+        }
+        ImGui::NextColumn();
+        if(ImGui::ImageButton(pickerIcon, sf::Vector2f(64,64)))
+        {
+            SelectedTool = Tool::eColourPick;
+            currentTool = std::make_unique<PickerToolType>();
+        }
+        ImGui::NextColumn();
+        if(ImGui::ImageButton(sprayIcon, sf::Vector2f(64,64)))
+        {
+            SelectedTool = Tool::eSpray;
+            currentTool = std::make_unique<SprayToolType>();
+        }
+        ImGui::NextColumn();
+        if(ImGui::ImageButton(eraserIcon, sf::Vector2f(64,64)))
+        {
+            SelectedTool = Tool::eErase;
+            currentTool = std::make_unique<EraserToolType>();
+        }
+        ImGui::NextColumn();
+        if(ImGui::ImageButton(nullIcon, sf::Vector2f(64,64)))
+        {
+            SelectedTool = Tool::eNull;
+            currentTool = std::make_unique<NullToolType>();
+        }
+        ImGui::NextColumn();
+        if(ImGui::ImageButton(circleIcon, sf::Vector2f(64,64)))
+            brushShape = BrushShape::eCircle;
+        ImGui::NextColumn();
+        if(ImGui::ImageButton(squareIcon, sf::Vector2f(64,64)))
+            brushShape = BrushShape::eSquare;
+    }
+    
+    ImGui::End();
+    
 }
 void DrawingGrid::Layers()
 {
     ImGui::Begin("Layers");
-       
-       ImGui::End();
+    ImGui::Columns(3,nullptr,100);
+    for(int i{0}; i<LayersVector.size();i++)
+    {
+        if(ImGui::ImageButton(TrackTextures[LayersVector[i]], {64,64}))
+        {
+            selectedLayer = i;
+        }
+        ImGui::NextColumn();
+    }
+    ImGui::End();
 }
 void DrawingGrid::Textures()
 {
+    static bool Dragging = false;
+    static float LayerScale = 1;
     ImGui::Begin("Texture Picker");
-     ImGui::Columns(3,nullptr,false);
+    ImGui::Columns(5,nullptr,false);
     ImGui::SetColumnOffset(1, 100);
     {
         for(int i{0}; i<TrackTextures.size();i++)
         {
             if(ImGui::ImageButton(TrackTextures[i], sf::Vector2f(64,64)))
             {
+                sf::Sprite sprite;
+                sprite.setTexture(TrackTextures[i]);
+                sprite.setPosition(canvas.GridPosition);
+                sprite.setScale(0.25,0.25);
+                TrackSprites.push_back(sprite);
                 
+                LayersVector.push_back(i);
+                selectedLayer = LayersVector.size()-1;
+            }
+            ImGui::NextColumn();
+        }
+    }
+
+    //Dragging will likely work better if I move to sf::Events, then I can get mouse released events
+    //fine for now though
+    if(TrackSprites.size() > 0 && SelectedTool == Tool::eNull)
+    {
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            LayerScale = TrackSprites[selectedLayer].getScale().x;
+            
+            if(TrackSprites[selectedLayer].getGlobalBounds().contains(sf::Vector2f(MousePos)))
+            {
+                Dragging = true;
+            }
+        }
+        else if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        {
+            Dragging = false;
+        }
+        if(Dragging)
+             TrackSprites[selectedLayer].setPosition(sf::Vector2f(MousePos));
+        else
+        {
+            if(ImGui::SliderFloat("Scale Selected Layer", &LayerScale, 0.01, 2))
+            {
+                TrackSprites[selectedLayer].setScale(LayerScale, LayerScale);
             }
         }
     }
-    ImGui::End();
+    
+        ImGui::End();
 }
 void DrawingGrid::Controls()
 {
@@ -183,12 +244,12 @@ void DrawingGrid::Controls()
     {
         if(!updatinggrid)
         {
-            if(!imguiHovered && grid.PointOnCanvas(sf::Vector2f(MousePos),false)) //Allow ImGui Windows to be above grid whilst also not drawing on grid
+            if(!imguiHovered && canvas.PointOnCanvas(sf::Vector2f(MousePos),false)) //Allow ImGui Windows to be above canvas whilst also not drawing on canvas
             {
                 if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
                     updatinggrid = true;
-                    currentTool->OnMouseDown(MousePos, grid, options);
+                    currentTool->OnMouseDown(MousePos, canvas, options);
                     updatinggrid = false;
                 }
             }
@@ -197,10 +258,10 @@ void DrawingGrid::Controls()
 }
 void DrawingGrid::Render(Window *window)
 {	
-    grid.Render(*window,IsShown);
+    canvas.Render(*window,IsShown);
     if(IsShown)
     {
-        if(grid.PointOnCanvas(sf::Vector2f(MousePos),false))
+        if(canvas.PointOnCanvas(sf::Vector2f(MousePos),false))
         {
             window->draw(GetPointer());
             switch (SelectedTool)
@@ -238,6 +299,13 @@ void DrawingGrid::Render(Window *window)
         cursor.loadFromSystem(sf::Cursor::Arrow);
         window->SFwindow.setMouseCursor(cursor);
     }
+    for(int s{0}; s<TrackSprites.size(); s++)
+    {
+        if(selectedLayer != s)
+            window->draw( TrackSprites[s]);
+    }
+    if(!TrackSprites.empty())
+        window->draw(TrackSprites[selectedLayer]);
 }
 void DrawingGrid::saveTracktoGrid(Track *track)
 {
@@ -255,7 +323,7 @@ void DrawingGrid::saveTracktoGrid(Track *track)
         {
             for(int x = Rect.left; x < (Rect.left + width*2); x++)
             {
-                grid.SetCell(sf::Vector2f(x,y), sf::Color(64,64,64));
+                canvas.SetPixel(sf::Vector2f(x,y), sf::Color(64,64,64));
             }
         }
     }
@@ -269,7 +337,7 @@ void DrawingGrid::saveTracktoGrid(Track *track)
         {
             for(int x = Rect.left; x < (Rect.left + width*2); x++)
             {
-                grid.SetCell(sf::Vector2f(x,y), sf::Color(64,64,64));
+                canvas.SetPixel(sf::Vector2f(x,y), sf::Color(64,64,64));
             }
         }
     }
@@ -283,17 +351,17 @@ void DrawingGrid::OnReEntry()
     IsShown = true;
 }
 
-Grid* DrawingGrid::getGrid()
+Canvas* DrawingGrid::getCanvas()
 {
-    return &grid;
+    return &canvas;
 }
 void DrawingGrid::Serialise(Yaml::Node &root, sw::ProgressBar &bar, std::string filename)
 {
-    grid.SaveImage(filename);
+    canvas.SaveImage(filename);
     std::string Data =
-    "GridSize: " + std::to_string(grid.TotalSize) + "\n"
+    "GridSize: " + std::to_string(canvas.TotalSize) + "\n"
     "TrackEdgeColour: " + std::to_string((uint32_t)TrackEdgeColour.toInteger()) + "\n"
-    "BackgroundColour: " + std::to_string((uint32_t)grid.GridBackground.toInteger()) + "\n"
+    "BackgroundColour: " + std::to_string((uint32_t)canvas.GridBackground.toInteger()) + "\n"
     "ImagePath: " + filename + "\n"
     "Optimise: " + std::to_string((int)Optimise) + "\n\n\n";
     bar.setPercentage(bar.getPercentage()+1);

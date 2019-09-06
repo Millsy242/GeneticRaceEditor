@@ -7,10 +7,10 @@
 //
 #include "Tool.hpp"
 #include <iostream>
-#include "Grid.hpp"
+#include "Canvas.hpp"
 #include <vector>
 
-void SprayToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void SprayToolType::OnMouseDown(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     for(int y=-options.BrushSize; y<=options.BrushSize; y++)
     {
@@ -26,16 +26,16 @@ void SprayToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions 
             
             if(std::sqrt(dx * dx + dy * dy) <= options.BrushSize  && randomnum < 10)
             {
-                grid.SetCell(sf::Vector2f(MousePos.x+x,MousePos.y+y), options.MainBrushColour);
+                canvas.SetPixel(sf::Vector2f(MousePos.x+x,MousePos.y+y), options.MainBrushColour);
             }
         }
     }
 }
-void SprayToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void SprayToolType::OnMouseUp(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     
 }
-void SprayToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void SprayToolType::OnMouseMove(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     
 }

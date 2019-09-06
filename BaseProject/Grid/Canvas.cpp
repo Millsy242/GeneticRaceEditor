@@ -6,10 +6,10 @@
 //  Copyright © 2019 Daniel Harvey. All rights reserved.
 //
 
-#include "Grid.hpp"
+#include "Canvas.hpp"
 #include <iostream>
 
-void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height)
+void Canvas::SetupCanvas(sf::Vector2f gridPos,int width, int height)
 {
     Width =  width;
     Height = height;
@@ -18,11 +18,11 @@ void Grid::SetupGrid(sf::Vector2f gridPos,int width, int height)
     renderimage.create(width, height,sf::Color::Green);
     canvasTexture.create(width, height);
     canvasTexture.loadFromImage(renderimage);
-    canvas.setTexture(&canvasTexture);
-    canvas.setPosition(GridPosition);
-    canvas.setSize(sf::Vector2f(width,height));
+    canvasShape.setTexture(&canvasTexture);
+    canvasShape.setPosition(GridPosition);
+    canvasShape.setSize(sf::Vector2f(width,height));
 }
-void Grid::SetupGrid(sf::Vector2f gridPos, std::string ImagePath)
+void Canvas::SetupCanvas(sf::Vector2f gridPos, std::string ImagePath)
 {
 
     GridPosition = gridPos;
@@ -35,17 +35,17 @@ void Grid::SetupGrid(sf::Vector2f gridPos, std::string ImagePath)
     canvasTexture.create(Width, Height);
     canvasTexture.loadFromImage(renderimage);
     
-    canvas.setTexture(&canvasTexture);
-    canvas.setPosition(GridPosition);
-    canvas.setSize(sf::Vector2f(Width, Height));
+    canvasShape.setTexture(&canvasTexture);
+    canvasShape.setPosition(GridPosition);
+    canvasShape.setSize(sf::Vector2f(Width, Height));
 }
-void Grid::SetCell(sf::Vector2f pos, sf::Color colour)
+void Canvas::SetPixel(sf::Vector2f pos, sf::Color colour)
 {
     pos-=GridPosition;
     if(PointOnCanvas(pos))
         renderimage.setPixel(pos.x, pos.y, colour);
 }
-sf::Color Grid::GetPixel(sf::Vector2f pos)
+sf::Color Canvas::GetPixel(sf::Vector2f pos)
 {
     pos-=GridPosition;
     if(PointOnCanvas(pos))
@@ -54,24 +54,24 @@ sf::Color Grid::GetPixel(sf::Vector2f pos)
     
     return sf::Color::Transparent;
 }
-bool Grid::PointOnCanvas(sf::Vector2f pos,bool adjustme)
+bool Canvas::PointOnCanvas(sf::Vector2f pos,bool adjustme)
 {
     if(adjustme)
         pos+=GridPosition;
-    if(canvas.getGlobalBounds().contains(pos))
+    if(canvasShape.getGlobalBounds().contains(pos))
         return true;
     else
         return false;
 }
-void Grid::Render(Window &window, bool isshown)
+void Canvas::Render(Window &window, bool isshown)
 {
     
     canvasTexture.loadFromImage(renderimage);
-    canvas.setTexture(&canvasTexture);
+    canvasShape.setTexture(&canvasTexture);
     
-    window.draw(canvas);
+    window.draw(canvasShape);
 }
-void Grid::SaveImage(std::string filename)
+void Canvas::SaveImage(std::string filename)
 {
     renderimage.saveToFile(filename);
 }

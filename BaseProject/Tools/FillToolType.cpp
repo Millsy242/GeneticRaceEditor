@@ -8,13 +8,13 @@
 
 #include "Tool.hpp"
 #include <vector>
-#include "Grid.hpp"
+#include "Canvas.hpp"
 
 
 
-void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void FillToolType::OnMouseDown(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
-        sf::Color target = grid.GetPixel(sf::Vector2f(MousePos));
+        sf::Color target = canvas.GetPixel(sf::Vector2f(MousePos));
         if(options.MainBrushColour == target)
         {
             return;
@@ -28,11 +28,11 @@ void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &
             S.pop_back();
             int x = p.second;
             int y = p.first;
-            if(grid.PointOnCanvas(sf::Vector2f(x-grid.GridPosition.x,y-grid.GridPosition.y)))
+            if(canvas.PointOnCanvas(sf::Vector2f(x-canvas.GridPosition.x,y-canvas.GridPosition.y)))
             {
-                if(grid.GetPixel(sf::Vector2f(x, y)) == target)
+                if(canvas.GetPixel(sf::Vector2f(x, y)) == target)
                 {
-                    grid.SetCell(sf::Vector2f(x, y), options.MainBrushColour);
+                    canvas.SetPixel(sf::Vector2f(x, y), options.MainBrushColour);
                     
                     S.push_back({y-1,x});
                     
@@ -48,11 +48,11 @@ void FillToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &
 
 }
 
-void FillToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void FillToolType::OnMouseUp(sf::Vector2i MousePos,Canvas& canvas, PaintOptions &options)
 {
     
 }
-void FillToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void FillToolType::OnMouseMove(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     
 }

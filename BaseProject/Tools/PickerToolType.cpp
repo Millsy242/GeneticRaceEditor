@@ -6,18 +6,18 @@
 //  Copyright © 2019 Daniel Harvey. All rights reserved.
 //
 #include "Tool.hpp"
-#include "Grid.hpp"
+#include "Canvas.hpp"
 
-void PickerToolType::OnMouseDown(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void PickerToolType::OnMouseDown(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
-    if(grid.GetPixel(sf::Vector2f(MousePos)) != sf::Color::Transparent)
-        options.MainBrushColour = grid.GetPixel(sf::Vector2f(MousePos));
+    if(canvas.GetPixel(sf::Vector2f(MousePos)) != sf::Color::Transparent)
+        options.MainBrushColour = canvas.GetPixel(sf::Vector2f(MousePos));
 }
-void PickerToolType::OnMouseUp(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void PickerToolType::OnMouseUp(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     
 }
-void PickerToolType::OnMouseMove(sf::Vector2i MousePos, Grid& grid, PaintOptions &options)
+void PickerToolType::OnMouseMove(sf::Vector2i MousePos, Canvas& canvas, PaintOptions &options)
 {
     
 }

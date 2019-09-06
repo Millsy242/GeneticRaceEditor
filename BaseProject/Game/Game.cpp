@@ -169,8 +169,8 @@ void Game::Save()
     bar.setPercentage(0.f);
     
     //SerialiseTrack
-    std::string HeaderString,TrackString,GridString,Data{""};
-    Data = "Version: " + std::to_string(Version) + "\nName: " + TrackName + "\nWidth : " + std::to_string(Grid.getGrid()->Width) + "\nHeight : " + std::to_string(Grid.getGrid()->Height) + "\n";
+    std::string HeaderString,TrackString,CanvasString,Data{""};
+    Data = "Version: " + std::to_string(Version) + "\nName: " + TrackName + "\nWidth : " + std::to_string(Grid.getCanvas()->Width) + "\nHeight : " + std::to_string(Grid.getCanvas()->Height) + "\n";
     
     try
     {
@@ -194,7 +194,7 @@ void Game::Save()
     Grid.Serialise(root,bar,TrackName+".png");
     bar.setPercentage(50.f);
     savingtext.setString("Saving... Writing Grid Data");
-    Yaml::Serialize(root, GridString);
+    Yaml::Serialize(root, CanvasString);
     bar.setPercentage(60.f);
     savingtext.setString("Saving... Finished Writing Data");
     
@@ -205,7 +205,7 @@ void Game::Save()
     bar.setPercentage(70.f);
     file << "\n" << TrackString;
     bar.setPercentage(80.f);
-    file << "\n" << GridString;;
+    file << "\n" << CanvasString;;
     bar.setPercentage(90.f);
     file.close();
     bar.setPercentage(100.f);
