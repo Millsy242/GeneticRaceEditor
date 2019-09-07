@@ -33,7 +33,7 @@ public:
     sf::Color GetPixel(sf::Vector2f pos);
     void SetPixel(sf::Vector2f pos, sf::Color colour);
     void SaveImage(std::string filename);
-   
+    void saveSpriteToCanvas(const sf::Texture *texture,sf::Vector2f pos);
     
     bool Changed = true;
 	

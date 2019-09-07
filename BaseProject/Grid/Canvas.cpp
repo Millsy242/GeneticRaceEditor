@@ -54,6 +54,23 @@ sf::Color Canvas::GetPixel(sf::Vector2f pos)
     
     return sf::Color::Transparent;
 }
+void Canvas::saveSpriteToCanvas(const sf::Texture *texture,sf::Vector2f pos)
+{
+    auto teximage = texture->copyToImage();
+    for(int y{0}; y<texture->getSize().y; y++)
+    {
+        for(int x{0}; x<texture->getSize().x; x++)
+        {
+            if(teximage.getPixel(x, y) != sf::Color::Transparent)
+            {
+                int ImageX = (pos.x + x) - GridPosition.x;
+                int ImageY = (pos.y + y) - GridPosition.y;
+                renderimage.setPixel(ImageX, ImageY, teximage.getPixel(x, y));
+            }
+        }
+    }
+    //renderimage.copy(texture->copyToImage(), pos.x-GridPosition.x, pos.y-GridPosition.y);
+}
 bool Canvas::PointOnCanvas(sf::Vector2f pos,bool adjustme)
 {
     if(adjustme)

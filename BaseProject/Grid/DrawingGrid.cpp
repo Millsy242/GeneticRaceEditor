@@ -202,7 +202,7 @@ void DrawingGrid::Textures()
                 TrackSprites.push_back(sprite);
                 
                 LayersVector.push_back(i);
-                selectedLayer = LayersVector.size()-1;
+                selectedLayer = (int)LayersVector.size()-1;
             }
             ImGui::NextColumn();
         }
@@ -226,12 +226,18 @@ void DrawingGrid::Textures()
             Dragging = false;
         }
         if(Dragging)
+        {
              TrackSprites[selectedLayer].setPosition(sf::Vector2f(MousePos));
+        }
         else
         {
             if(ImGui::SliderFloat("Scale Selected Layer", &LayerScale, 0.01, 2))
             {
                 TrackSprites[selectedLayer].setScale(LayerScale, LayerScale);
+            }
+            if(ImGui::Button("save sprite to canvas"))
+            {
+                canvas.saveSpriteToCanvas(TrackSprites[selectedLayer].getTexture(), TrackSprites[selectedLayer].getPosition());
             }
         }
     }
