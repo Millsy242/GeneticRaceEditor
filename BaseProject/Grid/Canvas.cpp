@@ -82,7 +82,6 @@ bool Canvas::PointOnCanvas(sf::Vector2f pos,bool adjustme)
 }
 void Canvas::Render(Window &window, bool isshown)
 {
-    
     canvasTexture.loadFromImage(renderimage);
     canvasShape.setTexture(&canvasTexture);
     

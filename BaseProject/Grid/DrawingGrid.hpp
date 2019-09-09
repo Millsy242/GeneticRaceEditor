@@ -57,6 +57,7 @@ private:
     void Layers();
     void Textures();
     
+    
     std::vector<sf::Sprite> TrackSprites;
     std::vector<sf::Texture> TrackTextures;
     std::vector<unsigned int> LayersVector; 

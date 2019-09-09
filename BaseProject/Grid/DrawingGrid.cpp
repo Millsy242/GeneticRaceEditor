@@ -239,6 +239,10 @@ void DrawingGrid::Textures()
             {
                 canvas.saveSpriteToCanvas(TrackSprites[selectedLayer].getTexture(), TrackSprites[selectedLayer].getPosition());
             }
+            if(ImGui::Button("remove layer"))
+            {
+             
+            }
         }
     }
     
