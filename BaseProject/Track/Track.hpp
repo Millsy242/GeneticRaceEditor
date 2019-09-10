@@ -49,6 +49,7 @@ public:
 	~Track(){};
     
     void Start(int ScreenWidth, int ScreenHeight,bool loading = false,int NumNodes = -1,int s1 = -1, int s2 = -1, int s3 = -1 , int Start = -1, int End = -1, float Twidth = -1.f);
+    void StartFromData(int ScreenWidth, int ScreenHeight,std::vector<sf::Vector2f> datapoints,int s1 , int s2 , int s3  , int Start, int End , float Twidth );
     void Input(sf::Vector2i MousePos); 
     void UpdateTrack();
     void Render(Window *window);

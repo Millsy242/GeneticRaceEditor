@@ -54,22 +54,30 @@ sf::Color Canvas::GetPixel(sf::Vector2f pos)
     
     return sf::Color::Transparent;
 }
-void Canvas::saveSpriteToCanvas(const sf::Texture *texture,sf::Vector2f pos)
+void Canvas::saveSpriteToCanvas(const sf::Texture *texture,sf::Vector2f scale, sf::Vector2f pos)
 {
     auto teximage = texture->copyToImage();
-    for(int y{0}; y<texture->getSize().y; y++)
+    
+    sf::Image scaledImage;
+    scaledImage.create(teximage.getSize().x*scale.x, teximage.getSize().y*scale.y);
+    
+    auto resizeImage = [](const sf::Image& originalImage, sf::Image& resizedImage)
     {
-        for(int x{0}; x<texture->getSize().x; x++)
+        const sf::Vector2u originalImageSize{ originalImage.getSize() };
+        const sf::Vector2u resizedImageSize{ resizedImage.getSize() };
+        for (unsigned int y{ 0u }; y < resizedImageSize.y; ++y)
         {
-            if(teximage.getPixel(x, y) != sf::Color::Transparent)
+            for (unsigned int x{ 0u }; x < resizedImageSize.x; ++x)
             {
-                int ImageX = (pos.x + x) - GridPosition.x;
-                int ImageY = (pos.y + y) - GridPosition.y;
-                renderimage.setPixel(ImageX, ImageY, teximage.getPixel(x, y));
+                unsigned int origX{ static_cast<unsigned int>(static_cast<double>(x) / resizedImageSize.x * originalImageSize.x) };
+                unsigned int origY{ static_cast<unsigned int>(static_cast<double>(y) / resizedImageSize.y * originalImageSize.y) };
+                resizedImage.setPixel(x, y, originalImage.getPixel(origX, origY));
             }
         }
-    }
-    //renderimage.copy(texture->copyToImage(), pos.x-GridPosition.x, pos.y-GridPosition.y);
+    };
+    
+    resizeImage(teximage,scaledImage);
+    renderimage.copy(scaledImage, pos.x-GridPosition.x, pos.y-GridPosition.y,sf::IntRect(0, 0, 0, 0), true);
 }
 bool Canvas::PointOnCanvas(sf::Vector2f pos,bool adjustme)
 {

@@ -9,7 +9,7 @@
 #ifndef Canvas_hpp
 #define Canvas_hpp
 
-#include <vector>
+
 #include "Window.hpp"
 #include <SFML/Graphics.hpp>
 #include <fstream>
@@ -17,7 +17,7 @@
 #include <thread>
 #include "SelbaWard.hpp"
 
-
+#include <vector>
 
 class Canvas
 {
@@ -33,7 +33,7 @@ public:
     sf::Color GetPixel(sf::Vector2f pos);
     void SetPixel(sf::Vector2f pos, sf::Color colour);
     void SaveImage(std::string filename);
-    void saveSpriteToCanvas(const sf::Texture *texture,sf::Vector2f pos);
+    void saveSpriteToCanvas(const sf::Texture *texture,sf::Vector2f scale, sf::Vector2f pos);
     
     bool Changed = true;
 	

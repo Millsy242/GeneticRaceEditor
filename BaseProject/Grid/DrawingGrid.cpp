@@ -54,7 +54,17 @@ void DrawingGrid::Start(int width, int height, float offsetx, float offsety, int
         
         filenum++;
     }
-    
+    for(int i{0}; i< 100; i++)
+    {
+        sf::Sprite sprite;
+        sprite.setPosition(canvas.GridPosition);
+        sprite.setScale(0.25,0.25);
+        LayerStruct layer;
+        layer.sprite = sprite;
+        layer.TextureNumber = -1;
+        layer.active = false;
+        TrackSprites.push_back(layer);
+    }
     
     mythread = std::thread(&DrawingGrid::Controls, this);
 }
@@ -122,7 +132,6 @@ void DrawingGrid::ToolControls()
     ImGui::Columns(3,nullptr,false);
     ImGui::SetColumnOffset(1, 100);
     {
-        
         if(ImGui::ImageButton(brushIcon, sf::Vector2f(64,64)))
         {
             SelectedTool = Tool::eBrush;
@@ -160,26 +169,31 @@ void DrawingGrid::ToolControls()
         }
         ImGui::NextColumn();
         if(ImGui::ImageButton(circleIcon, sf::Vector2f(64,64)))
+        {
             brushShape = BrushShape::eCircle;
+        }
         ImGui::NextColumn();
         if(ImGui::ImageButton(squareIcon, sf::Vector2f(64,64)))
+        {
             brushShape = BrushShape::eSquare;
+        }
     }
-    
     ImGui::End();
-    
 }
 void DrawingGrid::Layers()
 {
     ImGui::Begin("Layers");
     ImGui::Columns(3,nullptr,100);
-    for(int i{0}; i<LayersVector.size();i++)
+    for(int i{0}; i<TrackSprites.size();i++)
     {
-        if(ImGui::ImageButton(TrackTextures[LayersVector[i]], {64,64}))
+        if(TrackSprites[i].active)
         {
-            selectedLayer = i;
+            if(ImGui::ImageButton(TrackTextures[TrackSprites[i].TextureNumber], {64,64}))
+            {
+                selectedLayer = i;
+            }
+            ImGui::NextColumn();
         }
-        ImGui::NextColumn();
     }
     ImGui::End();
 }
@@ -195,14 +209,22 @@ void DrawingGrid::Textures()
         {
             if(ImGui::ImageButton(TrackTextures[i], sf::Vector2f(64,64)))
             {
-                sf::Sprite sprite;
-                sprite.setTexture(TrackTextures[i]);
-                sprite.setPosition(canvas.GridPosition);
-                sprite.setScale(0.25,0.25);
-                TrackSprites.push_back(sprite);
-                
-                LayersVector.push_back(i);
-                selectedLayer = (int)LayersVector.size()-1;
+                for(int N{0}; N<TrackSprites.size();N++)
+                {
+                    if(!TrackSprites[N].active)
+                    {
+                        TrackSprites[N].sprite = sf::Sprite();
+                        TrackSprites[N].sprite.setTexture(TrackTextures[i]);
+                        TrackSprites[N].sprite.setPosition(canvas.GridPosition);
+                        TrackSprites[N].sprite.setScale(0.25,0.25);
+                        
+                        TrackSprites[N].TextureNumber = i;
+                        TrackSprites[N].active = true;
+                    
+                        selectedLayer = N;
+                        break;
+                    }
+                }
             }
             ImGui::NextColumn();
         }
@@ -214,9 +236,9 @@ void DrawingGrid::Textures()
     {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            LayerScale = TrackSprites[selectedLayer].getScale().x;
+            LayerScale = TrackSprites[selectedLayer].sprite.getScale().x;
             
-            if(TrackSprites[selectedLayer].getGlobalBounds().contains(sf::Vector2f(MousePos)))
+            if(TrackSprites[selectedLayer].sprite.getGlobalBounds().contains(sf::Vector2f(MousePos)))
             {
                 Dragging = true;
             }
@@ -227,21 +249,22 @@ void DrawingGrid::Textures()
         }
         if(Dragging)
         {
-             TrackSprites[selectedLayer].setPosition(sf::Vector2f(MousePos));
+             TrackSprites[selectedLayer].sprite.setPosition(sf::Vector2f(MousePos));
         }
         else
         {
             if(ImGui::SliderFloat("Scale Selected Layer", &LayerScale, 0.01, 2))
             {
-                TrackSprites[selectedLayer].setScale(LayerScale, LayerScale);
+                TrackSprites[selectedLayer].sprite.setScale(LayerScale, LayerScale);
             }
             if(ImGui::Button("save sprite to canvas"))
             {
-                canvas.saveSpriteToCanvas(TrackSprites[selectedLayer].getTexture(), TrackSprites[selectedLayer].getPosition());
+                canvas.saveSpriteToCanvas(TrackSprites[selectedLayer].sprite.getTexture(),TrackSprites[selectedLayer].sprite.getScale(), TrackSprites[selectedLayer].sprite.getPosition());
+                 TrackSprites[selectedLayer].active = false;
             }
             if(ImGui::Button("remove layer"))
             {
-             
+                TrackSprites[selectedLayer].active = false;
             }
         }
     }
@@ -267,7 +290,12 @@ void DrawingGrid::Controls()
     }
 }
 void DrawingGrid::Render(Window *window)
-{	
+{
+    if(selectedLayer >= numLayers)
+    {
+        selectedLayer = 0;
+    }
+    
     canvas.Render(*window,IsShown);
     if(IsShown)
     {
@@ -311,11 +339,11 @@ void DrawingGrid::Render(Window *window)
     }
     for(int s{0}; s<TrackSprites.size(); s++)
     {
-        if(selectedLayer != s)
-            window->draw( TrackSprites[s]);
+        if(selectedLayer != s && TrackSprites[s].active)
+            window->draw( TrackSprites[s].sprite);
     }
-    if(!TrackSprites.empty())
-        window->draw(TrackSprites[selectedLayer]);
+    if(TrackSprites[selectedLayer].active)
+        window->draw(TrackSprites[selectedLayer].sprite); //draw selected sprite last so its on top
 }
 void DrawingGrid::saveTracktoGrid(Track *track)
 {

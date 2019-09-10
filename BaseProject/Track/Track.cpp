@@ -50,6 +50,42 @@ void Track::Start(int ScreenWidth, int ScreenHeight,bool loading ,int NumNodes,i
 	
     UpdateTrack();
 }
+void Track::StartFromData(int ScreenWidth, int ScreenHeight,std::vector<sf::Vector2f> datapoints,int s1, int s2 , int s3  , int Start , int End , float Twidth )
+{
+    Clear();
+        numNodes = (int)datapoints.size();
+        Sectors[0] = s1;
+        Sectors[1] = s2;
+        Sectors[2] = s3;
+        StartLine = Start;
+        FinishLine = End;
+        trackwidth = Twidth;
+    
+    font.loadFromFile("Roboto-Black.ttf");
+    text.setFillColor(sf::Color::Magenta);
+    text.setCharacterSize(20);
+    text.setFont(font);
+    
+    for (int i = 0; i < numNodes; i++)
+       {
+           node newnode;
+           newnode.setup(spline,datapoints[i]);
+           
+           node LNode;
+           LNode.setup(Lspline, {0,0});
+           node RNode;
+           RNode.setup(Rspline, {0,0});
+           
+           
+           
+           nodes.push_back(newnode);
+           Lnodes.push_back(LNode);
+           Rnodes.push_back(RNode);
+           
+       }
+       
+       UpdateTrack();
+}
 void Track::Clear()
 {
     spline.points.clear();
@@ -107,9 +143,9 @@ void Track::Input(sf::Vector2i MousePos)
 	 bool changed = false;
 
 	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_MenuBar;
-	window_flags |= ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoResize;
+//	window_flags |= ImGuiWindowFlags_MenuBar;
+//	window_flags |= ImGuiWindowFlags_NoMove;
+//  window_flags |= ImGuiWindowFlags_NoResize;
 	
 	ImGui::Begin("Track Tools",NULL, window_flags);
 

@@ -250,21 +250,19 @@ void Game::Load(std::string filename)
     savingtext.setString("Loading Track");
     int numnodes{root["NumNodes"].As<int>()},Sector1{root["Sector1"].As<int>()},Sector2{root["Sector2"].As<int>()},Sector3{root["Sector3"].As<int>()},Start{root["StartLine"].As<int>()},Finish{root["FinishLine"].As<int>()};
     float TrackWidth{root["TrackWidth"].As<float>()};
-    
-    track.Start(window.ScreenWidth(), window.ScreenHeight(),true,numnodes,Sector1,Sector2,Sector3,Start,Finish,TrackWidth);
-    track.Clear();
-    
+        
     float Tx,Ty;
     std::string name;
+    std::vector<sf::Vector2f> points;
     for(int i{0};i<numnodes;i++)
     {
         name = "Node" + std::to_string(i);
         savingtext.setString("Setting Track" + name);
         Tx = root[name + "_X"].As<int>();
         Ty = root[name + "_Y"].As<int>();
-        track.spline.AddPoint(sf::Vector2f(Tx,Ty));
+       points.push_back(sf::Vector2f(Tx,Ty));
     }
-    track.UpdateTrack();
+    track.StartFromData(window.ScreenWidth(), window.ScreenHeight(), points, Sector1,Sector2,Sector3,Start,Finish,TrackWidth);
     savingtext.setString("Finished");
     GameState = eNull;
     savingtext.setString("");

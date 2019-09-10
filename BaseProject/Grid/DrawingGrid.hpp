@@ -32,6 +32,12 @@ enum BrushShape
     eCircle,
     eSquare
 };
+struct LayerStruct
+{
+    sf::Sprite sprite;
+    int TextureNumber;
+    bool active;
+};
 class Track;
 class DrawingGrid
 {
@@ -58,7 +64,7 @@ private:
     void Textures();
     
     
-    std::vector<sf::Sprite> TrackSprites;
+    std::vector<LayerStruct> TrackSprites;
     std::vector<sf::Texture> TrackTextures;
     std::vector<unsigned int> LayersVector; 
     
@@ -67,7 +73,8 @@ private:
     
     Canvas canvas;
     int scale = 1;
-    int selectedLayer = 0; 
+    int selectedLayer = 0;
+    int numLayers = 100;
     
     bool IsShown = false;
     bool imguiHovered = false; 
